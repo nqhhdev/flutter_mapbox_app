@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "21018233460",
+    "firebase_url": "https://setel-concierge-app.firebaseio.com",
+    "project_id": "setel-concierge-app",
+    "storage_bucket": "setel-concierge-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21018233460:android:22de3876d1479e48125f21",
+        "android_client_info": {
+          "package_name": "com.setel.concierge.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21018233460-tq243h0ba61mfenp32khfefi4kv45i8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN-qlb0cuRIkbIjZm0qbzbTLN-SZvT5MU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21018233460-tq243h0ba61mfenp32khfefi4kv45i8d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "21018233460-u6b13caqfjioignr7rf2ghv9vpiuoe6d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.setel.concierge.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
