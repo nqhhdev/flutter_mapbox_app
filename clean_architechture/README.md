@@ -4,11 +4,6 @@ A new Flutter application with clean architechture
 
 ## Getting Started
 
-## Terminal build APK or IPA
-- run terminal build apk "flutter build apk --flavor development"
-- run terminal build ios "flutter build ios --flavor development"
-- "flutter build apk --flavor {flavorName}"
-
 ###Configuration Environment Running
 - ANDROID STUDIO
 Step 1 : Open "Edit Configuration in Android Studio"
@@ -19,17 +14,22 @@ Step 2 : Create new Configuration with build flavor value is :
     + Production Environment : production
 - VS CODE
 
+###One terminal to build both IPA and APK
+- .build.sh {enviroment} : .build.sh development
+- enviroment can be : development, staging, production
+- Note after build IPA : After build IOS finish. Go to Xcode => Archive IPA file
+
+
 ###These step need to run before can run app in code
 
 - Multi-languages
-Step 1 : run terminal "flutter pub global activate intl_utils"
+Step 1 : run terminal "flutter clean"
 
-Step 2 : run terminal "flutter pub global run intl_utils:generate"
+Step 2 : run terminal "flutter pub get"
 
-- Json serializable
-Step 3 : run terminal "flutter pub run build_runner build"
+Step 3 : run terminal "flutter pub global run intl_utils:generate"
 
-- Assets generate
+- Assets,Json generate
 Step 4 : run terminal "dart pub global activate flutter_gen"
 
 Step 5 : run terminal "flutter packages pub run build_runner build"
@@ -168,3 +168,19 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 - Delete assets from `assets/<asset types>`
 - Run `flutter pub run build_runner build` in console
 - `lib/gen/assets` will be updated with currently available assets.
+
+
+##Note when build apk release
+- Refer to this issue that if using new gradle.properties will be error while build release app.
+So that need to use older version
+ + build.gradle "build:gradle:3.5.0" on android/build.gradle 
+ + "gradle-5.6.2" on gradle-wrapper.properties 
+
+## Terminal build APK or IPA
+- run terminal build apk "flutter build apk --flavor development"
+- run terminal build ios "flutter build ios --flavor development"
+- "flutter build apk --flavor {flavorName}"
+
+## How to change version number and version code :
+- Go to pubspec.yaml => line version to change : 
+- Example : 1.0.10+3 => Version name : 1.0.10, Version code : 3
