@@ -9,26 +9,29 @@ A new Flutter application with clean architechture
 - run terminal build ios "flutter build ios --flavor development"
 - "flutter build apk --flavor {flavorName}"
 
-##Configuration Environment Running
+###Configuration Environment Running
 - ANDROID STUDIO
 Step 1 : Open "Edit Configuration in Android Studio"
+
 Step 2 : Create new Configuration with build flavor value is :
     + Develop Environment : development
     + Staging Environment : staging
     + Production Environment : production
 - VS CODE
 
-These step need to run before can run app in code
+###These step need to run before can run app in code
 
-//Multi-languages
+- Multi-languages
 Step 1 : run terminal "flutter pub global activate intl_utils"
+
 Step 2 : run terminal "flutter pub global run intl_utils:generate"
 
-//Json serializable
+- Json serializable
 Step 3 : run terminal "flutter pub run build_runner build"
 
-//Assets generate
+- Assets generate
 Step 4 : run terminal "dart pub global activate flutter_gen"
+
 Step 5 : run terminal "flutter packages pub run build_runner build"
 
 ### Project architecture (Clean Architecture Approach)
@@ -123,12 +126,8 @@ flutter pub global run intl_utils:generate
 1. Open Flutter intl in `Action`
 2. Click on `Initialize for project`
 
-![image](screenshots/intl_prompt.png)
-
 3. To add / remove Locale, choose `Add Locale` / `Remove Locale`
 4. Then it will promp which locale
-
-![image](./screenshots/intl_add_locale.png)
 
 **Current available locale is en, ms_MY**
 

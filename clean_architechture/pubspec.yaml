@@ -42,6 +42,9 @@ dependencies:
   dio: ^3.0.1
   flutter_svg: ^0.19.3
   intl: ^0.17.0
+  firebase_core: ^0.7.0
+  firebase_analytics: ^7.0.1
+  firebase_crashlytics: ^0.4.0+1
 
 dev_dependencies:
   build_runner: ^1.11.5

@@ -13,7 +13,8 @@ class LoadingDialog {
         children: [
           const CircularProgressIndicator(),
           Container(
-              margin: const EdgeInsets.only(left: 15), child: const Text("Loading...")),
+              margin: const EdgeInsets.only(left: 15),
+              child: const Text("Loading...")),
         ],
       ),
     );
