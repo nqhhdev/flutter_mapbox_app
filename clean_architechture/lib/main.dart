@@ -1,4 +1,5 @@
 import 'package:clean_architechture/config/navigation_util.dart';
+import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/app_config.dart';
 import 'generated/l10n.dart';
@@ -35,37 +37,56 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  final FirebaseAnalytics analytics = FirebaseAnalytics();
+class MyApp extends StatefulWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AppTheme appTheme = getIt<AppTheme>();
+
+  @override
+  void initState() {
+    appTheme.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    appTheme.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
-      ],
-      navigatorKey: NavigationUtil.rootKey,
-      debugShowCheckedModeBanner: false,
-      initialRoute: RouteDefine.LoginScreen.name,
-      onGenerateRoute: AppRouting.generateRoute,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: "RaleWay",
-        textTheme: const TextTheme(
-          headline1: TextStyle(fontSize: 42.0, fontWeight: FontWeight.bold),
-          headline2: TextStyle(fontSize: 36.0, fontStyle: FontStyle.normal),
-          bodyText2: TextStyle(fontSize: 33.0),
-          // Using Text Theme with Theme.of(context).textTheme.bodyText2,
-        ),
+    return ScreenUtilInit(
+      designSize: const Size(400, 800),
+      builder: () => MaterialApp(
+        title: 'Flutter Demo',
+        navigatorObservers: <NavigatorObserver>[
+          MyApp.observer,
+        ],
+        navigatorKey: NavigationUtil.rootKey,
+        debugShowCheckedModeBanner: false,
+        initialRoute: RouteDefine.LoginScreen.name,
+        onGenerateRoute: AppRouting.generateRoute,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: appTheme.currentTheme,
+        localizationsDelegates: [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
       ),
-      localizationsDelegates: [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
     );
   }
 }

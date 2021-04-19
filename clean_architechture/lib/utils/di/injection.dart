@@ -1,4 +1,5 @@
 import 'package:clean_architechture/config/app_config.dart';
+import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/data/login/data_sources/remote/login_api.dart';
 import 'package:clean_architechture/data/login/repositories/login_repository_impl.dart';
 import 'package:clean_architechture/data/utils/shared_pref_manager.dart';
@@ -18,6 +19,9 @@ Future setupInjection() async {
 Future _registerAppComponents() async {
   final sharedPreferencesManager = await SharedPreferencesManager.getInstance();
   getIt.registerSingleton(sharedPreferencesManager);
+
+  final appTheme = AppTheme();
+  getIt.registerSingleton(appTheme);
 }
 
 Future<void> _registerNetworkComponents() async {

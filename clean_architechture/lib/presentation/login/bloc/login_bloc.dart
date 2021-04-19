@@ -19,22 +19,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginEvent event,
   ) async* {
     if (event is LoginPressed) {
-      try {
-        yield LoginLoadingState();
-        await loginUseCase.login(
-          LoginRequest(
-            userName: event.userName,
-            password: event.password,
-          ),
-        );
-        if (event.isError) {
-          yield LoginErrorState();
-        } else {
-          yield LoginSuccessState();
-        }
-      } catch (error) {
-        print("Error : $error");
+      yield* _mapLoginPressToState(event);
+    }
+  }
+
+  Stream<LoginState> _mapLoginPressToState(LoginPressed event) async* {
+    try {
+      yield LoginLoadingState();
+      await loginUseCase.login(
+        LoginRequest(
+          userName: event.userName,
+          password: event.password,
+        ),
+      );
+      if (event.isError) {
+        yield LoginErrorState();
+      } else {
+        yield LoginSuccessState();
       }
+    } catch (error) {
+      print("Error : $error");
     }
   }
 }
