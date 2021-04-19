@@ -22,12 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         switch (state.runtimeType) {
           case LoginSuccessState:
-            LoadingDialog.hideLoadingDialog();
+            LoadingDialog.hideLoadingDialog;
             Navigator.pushNamed(context, RouteDefine.HomeScreen.name);
             break;
           case LoginErrorState:
             print("Login error");
-            LoadingDialog.hideLoadingDialog();
+            LoadingDialog.hideLoadingDialog;
             break;
           case LoginLoadingState:
             LoadingDialog.showLoadingDialog(context);
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: Text(
                   "Login Screen ${S.current.home} ${Intl.getCurrentLocale()} ${AppConfig.getInstance().appFlavor}",
-                  style: Theme.of(context).textTheme.headline1,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ),
               MaterialButton(
