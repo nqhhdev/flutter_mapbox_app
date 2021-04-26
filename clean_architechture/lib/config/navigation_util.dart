@@ -6,5 +6,5 @@ class NavigationUtil {
   // For get current context. Can use rootKey.currentContext
   static GlobalKey<NavigatorState> get rootKey => _rootNavigator;
 
-  static BuildContext get currentContext => rootKey.currentContext;
+  static BuildContext? get currentContext => rootKey.currentContext;
 }

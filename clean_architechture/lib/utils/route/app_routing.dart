@@ -14,13 +14,13 @@ class AppRouting {
     final routes = <String, WidgetBuilder>{
       RouteDefine.LoginScreen.name: (_) => LoginRoute.route,
       RouteDefine.HomeScreen.name: (_) => HomeRoute.route,
-      RouteDefine.ListUserScreen.name: (_) => ListUserRoute.route,
+      // RouteDefine.ListUserScreen.name: (_) => ListUserRoute.route,
     };
 
     final routeBuilder = routes[settings.name];
 
     return _NoAnimationMaterialPageRoute(
-      builder: (context) => routeBuilder(context),
+      builder: (context) => routeBuilder!(context),
       settings: RouteSettings(name: settings.name),
     );
   }
@@ -28,8 +28,8 @@ class AppRouting {
 
 class _NoAnimationMaterialPageRoute<T> extends MaterialPageRoute<T> {
   _NoAnimationMaterialPageRoute({
-    @required WidgetBuilder builder,
-    RouteSettings settings,
+    required WidgetBuilder builder,
+    required RouteSettings settings,
     bool maintainState = true,
     bool fullscreenDialog = false,
   }) : super(

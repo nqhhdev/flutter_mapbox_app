@@ -5,8 +5,8 @@ class UserEntity extends Equatable {
   final String userPhone;
 
   UserEntity({
-    this.userName,
-    this.userPhone,
+    required this.userName,
+    required this.userPhone,
   });
 
   @override

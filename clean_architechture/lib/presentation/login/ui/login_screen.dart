@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Center(
                 child: Text(
-                  "Login Screen ${S.current.home} ${Intl.getCurrentLocale()} ${AppConfig.getInstance().appFlavor}",
+                  "Login Screen ${S.current.home} ${Intl.getCurrentLocale()} ${AppConfig.getInstance()!.appFlavor}",
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ),

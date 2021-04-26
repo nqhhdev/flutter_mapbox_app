@@ -12,10 +12,10 @@ class LoginResponse extends UserEntity {
   final String createdAt;
 
   LoginResponse({
-    this.userName,
-    this.email,
-    this.phone,
-    this.createdAt,
+    required this.userName,
+    required this.email,
+    required this.phone,
+    required this.createdAt,
   }) : super(
           userPhone: phone,
           userName: userName,

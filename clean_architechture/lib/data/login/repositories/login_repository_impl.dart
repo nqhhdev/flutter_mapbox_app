@@ -14,7 +14,7 @@ class LoginRepositoryImpl implements LoginRepository {
       // final loginResponse = await api.login(request);
       await Future.delayed(const Duration(seconds: 3));
       return LoginResponse(
-          userName: "UserName", phone: "phone", email: "email");
+          userName: "UserName", phone: "phone", email: "email", createdAt: '');
     } catch (e) {
       throw Exception('Unexpected Exception $e');
     }

@@ -18,7 +18,7 @@ Future setupInjection() async {
 
 Future _registerAppComponents() async {
   final sharedPreferencesManager = await SharedPreferencesManager.getInstance();
-  getIt.registerSingleton(sharedPreferencesManager);
+  getIt.registerSingleton<SharedPreferencesManager>(sharedPreferencesManager!);
 
   final appTheme = AppTheme();
   getIt.registerSingleton(appTheme);
@@ -27,7 +27,7 @@ Future _registerAppComponents() async {
 Future<void> _registerNetworkComponents() async {
   final dio = Dio(
     BaseOptions(
-      baseUrl: AppConfig.getInstance().apiBaseUrl,
+      baseUrl: AppConfig.getInstance()!.apiBaseUrl,
       connectTimeout: 10000,
     ),
   );
