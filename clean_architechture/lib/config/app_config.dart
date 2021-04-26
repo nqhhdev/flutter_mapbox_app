@@ -9,11 +9,11 @@ class AppConfig {
   final AppFlavor appFlavor;
 
   AppConfig({
-    this.apiBaseUrl,
-    this.appFlavor,
+    required this.apiBaseUrl,
+    required this.appFlavor,
   });
 
-  static AppConfig _instance;
+  static AppConfig? _instance;
 
   static AppConfig devConfig = AppConfig(
     apiBaseUrl: 'https://api.dev2.setel.my/api/',
@@ -30,7 +30,7 @@ class AppConfig {
     appFlavor: AppFlavor.Production,
   );
 
-  static AppConfig getInstance({flavorName}) {
+  static AppConfig? getInstance({flavorName}) {
     if (_instance == null) {
       switch (flavorName) {
         case 'development':

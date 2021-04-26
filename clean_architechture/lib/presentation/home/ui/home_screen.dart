@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -81,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _getSizes() {
-    final RenderBox renderBoxRed = _keyRed.currentContext.findRenderObject();
-    final sizeRed = renderBoxRed.size;
+    final renderBoxRed = _keyRed.currentContext!.findRenderObject();
+    final sizeRed = renderBoxRed!.paintBounds.size;
     print("SIZE of Red: $sizeRed");
     setState(() {
       containerSize = sizeRed.toString();

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 class LoadingDialog {
   static void get hideLoadingDialog {
-    Navigator.of(NavigationUtil.currentContext).pop();
+    Navigator.of(NavigationUtil.currentContext!).pop();
   }
 
   static void showLoadingDialog(BuildContext context) {

@@ -8,8 +8,8 @@ class LoginRequest {
   final String password;
 
   LoginRequest({
-    this.userName,
-    this.password,
+    required this.userName,
+    required this.password,
   });
   //
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>

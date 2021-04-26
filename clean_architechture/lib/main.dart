@@ -19,9 +19,9 @@ void main() async {
   await Firebase.initializeApp();
   // Listen for flavor triggered by iOS / android build
   await const MethodChannel('flavor').invokeMethod<String>('getFlavor').then(
-    (String flavor) async {
+    (String? flavor) async {
       final appConfig = AppConfig.getInstance(flavorName: flavor);
-      print("App Config : ${appConfig.apiBaseUrl}");
+      print("App Config : ${appConfig!.apiBaseUrl}");
     },
   ).catchError(
     (error) {
