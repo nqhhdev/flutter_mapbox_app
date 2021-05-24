@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   ExportOptions.plist
+   Runner
+
+   Created by Nguyen Huy Hoang on 13/05/2021.
+   Copyright (c) 2021 . All rights reserved.
+-->
+<plist version="1.0">
+<dict>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.hoangnh.flutter</key>
+        <string>Flutter Temp Provision</string>
+    </dict>
+    <key>method</key>
+    <string>ad-hoc</string>
+    <key>teamID</key>
+    <string>DC367NBJJ2</string>
+</dict>
+</plist>
