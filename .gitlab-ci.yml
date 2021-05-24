@@ -24,6 +24,7 @@ test:
   when: always
   tags:
     - vmo
+
   <<: *mobileBeforeScript
 
   script:
@@ -38,9 +39,10 @@ test:
 build_android_dev: #Job name
   stage: build # kind of job
   when: manual
-  allow_failure: false #Make to skip build step and deploy step
-  needs:
-    - test
+  allow_failure: true #Make to skip build step and deploy step
+#  needs:
+#    - test
+
   <<: *mobileBeforeScript
 
   script:
@@ -66,7 +68,7 @@ deploy_android_dev:
   stage: deploy
   when: manual
 
-  needs:
+  dependencies:
     - build_android_dev
   script:
     - npm install -g appcenter-cli
@@ -84,9 +86,10 @@ deploy_android_dev:
 build_android_staging:
   stage: build
   when: manual
-  allow_failure: false
-  needs:
-    - test
+  allow_failure: true
+#  needs:
+#    - test
+
   <<: *mobileBeforeScript
 
   script:
@@ -108,7 +111,7 @@ deploy_android_staging:
   stage: deploy
   when: manual
 
-  needs:
+  dependencies:
     - build_android_staging
   script:
     - npm install -g appcenter-cli
@@ -123,10 +126,10 @@ deploy_android_staging:
 build_android_production:
   stage: build
   when: manual
-  allow_failure: false
+  allow_failure: true
+#  needs:
+#    - test
 
-  needs:
-    - test
   <<: *mobileBeforeScript
 
   script:
@@ -148,7 +151,7 @@ deploy_android_production:
   stage: deploy
   when: manual
 
-  needs:
+  dependencies:
     - build_android_production
   script:
     - npm install -g appcenter-cli
@@ -160,12 +163,13 @@ deploy_android_production:
   only:
     - master
 
-build_ios_dev:
+.build_ios_dev:
   when: manual
   stage: build
-  allow_failure: false
-  needs:
-    - test
+  allow_failure: true
+#  needs:
+#    - test
+
   <<: *mobileBeforeScript
 
   script:
