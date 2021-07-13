@@ -1,10 +1,13 @@
 image: cirrusci/flutter:stable
 
-
 stages:
   - test
   - build
   - deploy
+
+variables:
+  CHAT_URL: 'https://chat.googleapis.com/v1/spaces/AAAAiFGqEtI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=1aXfezwABkyn66A86_NutUNB1Yei2KsrYE2vmTwnbWk%3D'
+  CONTENT: 'Content-Type: application/json'
 
 .before_script_template: &mobileBeforeScript
   before_script:
@@ -40,41 +43,82 @@ build_android_dev: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
-#  needs:
-#    - test
 
   <<: *mobileBeforeScript
 
   script:
-    # These step is set-up for distribute to slack app
+    # These step is set-up for distribute to slack app and google chat
     - export BUILD_FLAVOR="Dev"
     - export BUILD_FLAVOR_KEY="development"
-    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
     - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
-    - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
+    #    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
+    #    - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
+    - |-
+      PAYLOAD=$(cat << JSON
+      {
+      "cards": [
+        {
+          "sections": [
+            {
+              "widgets": [
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Branch</b>",
+                    "content": "$CI_BUILD_REF_NAME",
+                    "contentMultiline": "true",
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Commit</b>",
+                    "content": "$CI_COMMIT_TITLE",
+                    "contentMultiline": "false",
+                    "bottomLabel": "By <b>$GITLAB_USER_NAME</b>"
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Build version</b> $BUILD_VERSION",
+                    "content": "<b>Build number</b> $BUILD_NUMBER",
+                    "contentMultiline": "false",
+                    "bottomLabel": "<b>Flavor</b> $BUILD_FLAVOR_KEY"
+                  }
+                }
+              ]
+            },
+            {
+              "widgets": [
+                {
+                  "buttons": [
+                    {
+                      "textButton": {
+                        "text": "<b>DOWNLOAD HERE</b>",
+                        "onClick": {
+                          "openLink": {
+                            "url": "$CI_JOB_URL/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      }
+      JSON
+      )
+    - echo "$PAYLOAD"
+    - >
+      http_response=$(curl --location --request POST "${CHAT_URL}"
+      --header "${CONTENT}"
+      --data-raw "${PAYLOAD}")
+
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-development-release.apk
-  tags:
-    - vmo
-  only:
-    - /^bugfix/.*$/
-    - /^feature/.*$/
-    - /^hotfix/.*$/
-    - develop
-
-deploy_android_dev:
-  image: node:latest
-  stage: deploy
-  when: manual
-
-  dependencies:
-    - build_android_dev
-  script:
-    - npm install -g appcenter-cli
-    - appcenter login --token $APP_CENTER_TOKEN
-    - appcenter apps set-current $APP_CENTER_PROJECT_NAME
-    - appcenter distribute release -f build/app/outputs/flutter-apk/app-development-release.apk -g Collaborators
   tags:
     - vmo
   only:
@@ -87,17 +131,79 @@ build_android_staging:
   stage: build
   when: manual
   allow_failure: true
-#  needs:
-#    - test
+  #  needs:
+  #    - test
 
   <<: *mobileBeforeScript
 
   script:
     - export BUILD_FLAVOR="Staging"
     - export BUILD_FLAVOR_KEY="staging"
-    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
     - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
+    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-staging-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
     - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
+    - |-
+      PAYLOAD=$(cat << JSON
+      {
+      "cards": [
+        {
+          "sections": [
+            {
+              "widgets": [
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Branch</b>",
+                    "content": "$CI_BUILD_REF_NAME",
+                    "contentMultiline": "true",
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Commit</b>",
+                    "content": "$CI_COMMIT_TITLE",
+                    "contentMultiline": "false",
+                    "bottomLabel": "By <b>$GITLAB_USER_NAME</b>"
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Build version</b> $BUILD_VERSION",
+                    "content": "<b>Build number</b> $BUILD_NUMBER",
+                    "contentMultiline": "false",
+                    "bottomLabel": "<b>Flavor</b> $BUILD_FLAVOR_KEY"
+                  }
+                }
+              ]
+            },
+            {
+              "widgets": [
+                {
+                  "buttons": [
+                    {
+                      "textButton": {
+                        "text": "<b>DOWNLOAD HERE</b>",
+                        "onClick": {
+                          "openLink": {
+                            "url": "$CI_JOB_URL/artifacts/raw/build/app/outputs/flutter-apk/app-staging-release.apk"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      }
+      JSON
+      )
+    - echo "$PAYLOAD"
+    - >
+      http_response=$(curl --location --request POST "${CHAT_URL}"
+      --header "${CONTENT}"
+      --data-raw "${PAYLOAD}")
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-staging-release.apk
@@ -127,17 +233,79 @@ build_android_production:
   stage: build
   when: manual
   allow_failure: true
-#  needs:
-#    - test
+  #  needs:
+  #    - test
 
   <<: *mobileBeforeScript
 
   script:
     - export BUILD_FLAVOR="Production"
     - export BUILD_FLAVOR_KEY="production"
-    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
+    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-production-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
     - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
     - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
+    - |-
+      PAYLOAD=$(cat << JSON
+      {
+      "cards": [
+        {
+          "sections": [
+            {
+              "widgets": [
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Branch</b>",
+                    "content": "$CI_BUILD_REF_NAME",
+                    "contentMultiline": "true",
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Commit</b>",
+                    "content": "$CI_COMMIT_TITLE",
+                    "contentMultiline": "false",
+                    "bottomLabel": "By <b>$GITLAB_USER_NAME</b>"
+                  }
+                },
+                {
+                  "keyValue": {
+                    "topLabel": "<b>Build version</b> $BUILD_VERSION",
+                    "content": "<b>Build number</b> $BUILD_NUMBER",
+                    "contentMultiline": "false",
+                    "bottomLabel": "<b>Flavor</b> $BUILD_FLAVOR_KEY"
+                  }
+                }
+              ]
+            },
+            {
+              "widgets": [
+                {
+                  "buttons": [
+                    {
+                      "textButton": {
+                        "text": "<b>DOWNLOAD HERE</b>",
+                        "onClick": {
+                          "openLink": {
+                            "url": "$CI_JOB_URL/artifacts/raw/build/app/outputs/flutter-apk/app-production-release.apk"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+      }
+      JSON
+      )
+    - echo "$PAYLOAD"
+    - >
+      http_response=$(curl --location --request POST "${CHAT_URL}"
+      --header "${CONTENT}"
+      --data-raw "${PAYLOAD}")
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-production-release.apk
@@ -167,8 +335,8 @@ deploy_android_production:
   when: manual
   stage: build
   allow_failure: true
-#  needs:
-#    - test
+  #  needs:
+  #    - test
 
   <<: *mobileBeforeScript
 
