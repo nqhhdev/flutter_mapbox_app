@@ -4,7 +4,7 @@ class UserEntity extends Equatable {
   final String userName;
   final String userPhone;
 
-  UserEntity({
+  const UserEntity({
     required this.userName,
     required this.userPhone,
   });

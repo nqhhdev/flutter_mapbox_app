@@ -51,3 +51,4 @@ pubspec.lock
 /lib/generated/
 *.g.dart
 /lib/gen/
+coverage/lcov.info

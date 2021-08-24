@@ -9,7 +9,7 @@ class LoginPressed extends LoginEvent {
   final String password;
   final bool isError;
 
-  LoginPressed(
+  const LoginPressed(
     this.userName,
     this.password,
     this.isError,

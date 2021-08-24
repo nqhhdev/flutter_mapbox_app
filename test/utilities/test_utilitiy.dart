@@ -1,25 +1,18 @@
 import 'package:clean_architechture/config/navigation_util.dart';
 import 'package:clean_architechture/config/theme.dart';
-import 'package:clean_architechture/generated/l10n.dart';
 import 'package:clean_architechture/main.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class TestUtility {
-  /// Initialize localization.
-  static Future setupLocalization() async {
-    await S.load(const Locale('en'));
-  }
-
   /// Wrap child widget with [MaterialApp] widget and localization.
   static Future createTestableWidget(WidgetTester tester,
       {Widget? child}) async {
-    await TestUtility.setupLocalization();
-
     await tester.pumpWidget(TestWidgetWrapper(child: child));
 
     await tester.idle();
@@ -47,26 +40,28 @@ class TestWidgetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(400, 800),
-      builder: () => MaterialApp(
-        title: 'Flutter Demo',
-        navigatorObservers: <NavigatorObserver>[
-          MyApp.observer,
-        ],
-        navigatorKey: NavigationUtil.rootKey,
-        debugShowCheckedModeBanner: false,
-        initialRoute: RouteDefine.LoginScreen.name,
-        onGenerateRoute: AppRouting.generateRoute,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
+    return EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+      fallbackLocale: const Locale('en', 'US'),
+      path: 'resources/langs/langs.csv',
+      assetLoader: CsvAssetLoader(),
+      child: ScreenUtilInit(
+        designSize: const Size(400, 800),
+        builder: () => MaterialApp(
+          title: 'Flutter Demo',
+          navigatorObservers: <NavigatorObserver>[
+            MyApp.observer,
+          ],
+          navigatorKey: NavigationUtil.rootKey,
+          debugShowCheckedModeBanner: false,
+          initialRoute: RouteDefine.loginScreen.name,
+          onGenerateRoute: AppRouting.generateRoute,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+        ),
       ),
     );
   }

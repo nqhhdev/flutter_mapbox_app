@@ -1,6 +1,5 @@
 import 'package:clean_architechture/config/colors.dart';
 import 'package:clean_architechture/config/styles.dart';
-import 'package:clean_architechture/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme with ChangeNotifier {
@@ -16,7 +15,6 @@ class AppTheme with ChangeNotifier {
   static ThemeData get lightTheme {
     return ThemeData(
       primarySwatch: Colors.blue,
-      fontFamily: FontFamily.raleway,
       textTheme: _lightTextTheme,
       primaryTextTheme: _lightTextTheme,
       accentTextTheme: _darkTextTheme,
@@ -30,7 +28,6 @@ class AppTheme with ChangeNotifier {
     return ThemeData(
       primarySwatch: Colors.blue,
       textTheme: _darkTextTheme,
-      fontFamily: FontFamily.raleway,
       backgroundColor: AppColors.black,
       scaffoldBackgroundColor: AppColors.black,
       brightness: Brightness.dark,

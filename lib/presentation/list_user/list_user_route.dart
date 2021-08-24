@@ -6,6 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ListUserRoute {
   static Widget get route => BlocProvider(
         create: (context) => ListUserBloc()..add(GetListUser()),
-        child: ListUserScreen(),
+        child: const ListUserScreen(),
       );
 }

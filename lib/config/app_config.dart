@@ -1,7 +1,7 @@
 enum AppFlavor {
-  Development,
-  Staging,
-  Production,
+  development,
+  staging,
+  production,
 }
 
 class AppConfig {
@@ -17,17 +17,17 @@ class AppConfig {
 
   static AppConfig devConfig = AppConfig(
     apiBaseUrl: 'https://api.dev2.setel.my/api/',
-    appFlavor: AppFlavor.Development,
+    appFlavor: AppFlavor.development,
   );
 
   static AppConfig stagingConfig = AppConfig(
     apiBaseUrl: 'https://api.staging2.setel.my/api/',
-    appFlavor: AppFlavor.Staging,
+    appFlavor: AppFlavor.staging,
   );
 
   static AppConfig productionConfig = AppConfig(
     apiBaseUrl: 'https://api.prod.setel.my/api/',
-    appFlavor: AppFlavor.Production,
+    appFlavor: AppFlavor.production,
   );
 
   static AppConfig? getInstance({flavorName}) {

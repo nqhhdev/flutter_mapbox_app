@@ -1,15 +1,17 @@
+import 'dart:developer';
+
 import 'package:clean_architechture/config/app_config.dart';
 import 'package:clean_architechture/gen/assets.gen.dart';
-import 'package:clean_architechture/generated/l10n.dart';
 import 'package:clean_architechture/presentation/common/dialog/loading_dialog.dart';
 import 'package:clean_architechture/presentation/login/bloc/login_bloc.dart';
+import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -18,17 +20,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    print("hello");
-
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         switch (state.runtimeType) {
           case LoginSuccessState:
             LoadingDialog.hideLoadingDialog;
-            Navigator.pushNamed(context, RouteDefine.HomeScreen.name);
+            Navigator.pushNamed(context, RouteDefine.homeScreen.name);
             break;
           case LoginErrorState:
-            print("Login error");
             LoadingDialog.hideLoadingDialog;
             break;
           case LoginLoadingState:
@@ -43,14 +42,14 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Center(
                 child: Text(
-                  "Login Screen ${S.current.home} ${Intl.getCurrentLocale()} ${AppConfig.getInstance()!.appFlavor}",
+                  "Login Screen ${LocaleKeys.title.tr()} ${Intl.getCurrentLocale()} ${AppConfig.getInstance()!.appFlavor}",
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ),
               MaterialButton(
                 onPressed: () {
                   context.read<LoginBloc>().add(
-                        LoginPressed(
+                        const LoginPressed(
                           "userName",
                           "password",
                           false,
@@ -70,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialButton(
                 onPressed: () {
                   context.read<LoginBloc>().add(
-                        LoginPressed(
+                        const LoginPressed(
                           "userName",
                           "password",
                           true,
@@ -89,8 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               MaterialButton(
                 onPressed: () async {
-                  await S.load(const Locale('vi'));
-                  print("Result : ${Intl.getCurrentLocale()}");
+                  context.setLocale(const Locale("vi","VN"));
+                  log("Result : ${Intl.getCurrentLocale()}");
                   setState(() {});
                 },
                 color: Colors.blue,

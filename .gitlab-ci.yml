@@ -32,7 +32,6 @@ test:
 
   script:
     - flutter analyze
-    - flutter test --coverage
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/
