@@ -10,14 +10,11 @@ import 'package:clean_architechture/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
-import 'utilities/test_utilitiy.dart';
-
 void main() {
   setUpAll(() {
     GetIt.I.registerLazySingleton<AppTheme>(
       () => AppTheme(),
     );
-    TestUtility.setupLocalization();
   });
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.

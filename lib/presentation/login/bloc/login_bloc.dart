@@ -37,8 +37,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         yield LoginSuccessState();
       }
-    } catch (error) {
-      print("Error : $error");
-    }
+    } catch (_) {}
   }
 }

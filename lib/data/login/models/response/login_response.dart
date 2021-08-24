@@ -11,7 +11,7 @@ class LoginResponse extends UserEntity {
   final String phone;
   final String createdAt;
 
-  LoginResponse({
+  const LoginResponse({
     required this.userName,
     required this.email,
     required this.phone,

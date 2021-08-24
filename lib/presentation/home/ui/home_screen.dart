@@ -1,13 +1,13 @@
 import 'package:clean_architechture/config/theme.dart';
-import 'package:clean_architechture/generated/l10n.dart';
 import 'package:clean_architechture/utils/di/injection.dart';
+import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -45,7 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
             style: Theme.of(context).textTheme.bodyText1,
           ),
           Text(
-            S.current.title("Hoang"),
+            LocaleKeys.msg.tr(
+              namedArgs: {"userName": "Hoang"},
+              args: ["All"],
+            ),
             style: Theme.of(context).textTheme.bodyText2,
           ),
           OutlinedButton(
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           OutlinedButton(
             onPressed: () {
-              Navigator.pushNamed(context, RouteDefine.ListUserScreen.name);
+              Navigator.pushNamed(context, RouteDefine.listUserScreen.name);
             },
             child: Text(
               "Move To List User Screen",
@@ -83,7 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void _getSizes() {
     final renderBoxRed = _keyRed.currentContext!.findRenderObject();
     final sizeRed = renderBoxRed!.paintBounds.size;
-    print("SIZE of Red: $sizeRed");
     setState(() {
       containerSize = sizeRed.toString();
     });

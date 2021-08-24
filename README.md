@@ -6,38 +6,37 @@ A new Flutter application with clean architechture
 
 ###Configuration Environment Running
 - ANDROID STUDIO
-Step 1 : Open "Edit Configuration in Android Studio"
+  Step 1 : Open " Run => Edit Configuration in Android Studio"
 
 Step 2 : Create new Configuration with build flavor value is :
-    + Develop Environment : development
-    + Staging Environment : staging
-    + Production Environment : production
-- VS CODE
++ Develop Environment : development
++ Staging Environment : staging
++ Production Environment : production
 
-###One terminal to build both IPA and APK
-- .build.sh {enviroment} : .build.sh development
-- enviroment can be : development, staging, production
-- Note after build IPA : After build IOS finish. Go to Xcode => Archive IPA file
+###Build APK
+- flutter build apk --flavor {flavorOnStep2}
 
+###Build IPA without archive on Xcode
+- flutter build ipa --flavor {flavorOnStep2} --export-options-plist=ios/Runner/ExportOptions.plist
 
-###These step need to run before can run app in code
+### These step need to run before can run app in code
 
-- Multi-languages
 Step 1 : run terminal "flutter clean"
 
 Step 2 : run terminal "flutter pub get"
 
-Step 3 : run terminal "flutter pub global run intl_utils:generate"
+- Assets,Json , multi-languages generate
 
-- Assets,Json generate
-Step 4 : run terminal "dart pub global activate flutter_gen"
+  Step 3 : run terminal "dart pub global activate flutter_gen"
 
-Step 5 : run terminal "flutter packages pub run build_runner build"
+Step 4 : run terminal "flutter packages pub run build_runner build"
+or run terminal "flutter packages pub run build_runner build --delete-conflicting-outputs" if error
 
 ### Project architecture (Clean Architecture Approach)
 
 1. Why:
-    * We want to separate what type of database that we use for storage (might want to change it later on)
+    * We want to separate what type of database that we use for storage (might want to change it
+      later on)
     * To adhere SOLID principles since we are using OOP for this project.
     * Ensuring UI layers don't know what is going on at data layer at all.
     * Might want to separate each layers into different packages.
@@ -68,11 +67,10 @@ Step 5 : run terminal "flutter packages pub run build_runner build"
     2. https://github.com/ShadyBoukhary/flutter_clean_architecture (We don't use this plugin)
     3. https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
-
 ## Injections
 
-1. We are using `GetIt` for injections. It is fun because we can start the service locator and use it everywhere when
-   needed because they are injected at top-level in main.dart.
+1. We are using `GetIt` for injections. It is fun because we can start the service locator and use
+   it everywhere when needed because they are injected at top-level in main.dart.
 2. Only use it upon initialization
 
 ```
@@ -109,37 +107,40 @@ For non widget usage, manually inject the object on initialization.
 
 ### Localization
 
-Using this library to handle multi-languages. Follow this guide to understand and config languages files
+We are using Easy Localization to handle multi-languages. Using google sheet file on cloud will take
+less effort for change and update key and value. Only need update in google sheet file.
 
-* VSC, AS, IJ users need to install the plugins from the market Plugin : flutter-intl
+Google sheet sample on this project : 
+"https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE/edit#gid=1013756643"
 
-* others/CLI:
+Step to set-up google sheet :
 
-```
-flutter pub global activate intl_utils
+- 1 : Create a CSV Google Sheet with form like that form
+  "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE/edit#gid=1013756643"
+- 2 : Enable share for anyone have this link
+- 3 : on file locale_keys.dart in lib/utils/multi-languages/locale_keys.dart change docId annotation with
+  your google sheet docid Example of DocID is :
+  "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE (it's docId)
+  /edit#gid=1013756643"
+- 4 : run terminal : "flutter pub run build_runner build" to generate .g.dart localization file
+- 5 : When update new value on google sheet should run "flutter packages pub run build_runner build" again to get new file csv
 
-flutter pub global run intl_utils:generate
-```
+Step to use multi-languages import in code: 
 
-### Initialize plugins (IntelliJ reference)
+- Remember import file "multi_languages_utils.dart" instead of "locale_keys.dart" because first file
+already import library easy_localization extension,you no need to use 2 import
+  
+- Using : LocaleKeys.keyDefine.tr()  (tr() is using to change languages with current languages setup, remember have it)  
 
-1. Open Flutter intl in `Action`
-2. Click on `Initialize for project`
-
-3. To add / remove Locale, choose `Add Locale` / `Remove Locale`
-4. Then it will promp which locale
-
-**Current available locale is en, ms_MY**
-
-Link library : https://pub.dev/packages/intl_utils
-Link plugin : https://plugins.jetbrains.com/plugin/13666-flutter-intl
-//TODO : Generate with CSV file
-
+Link library : https://pub.dev/packages/easy_localization
+Link plugin generate csv from google
+sheet : https://github.com/Hoang-Nguyenn/easy_localization_generator
 
 ### Json parsing / serialization
 
-This project is implementing [json_serializable](https://pub.dev/packages/json_serializable). It use build_runner to
-generate files. If you make a change to these files, you need to re-run the generator using build_runner:
+This project is implementing [json_serializable](https://pub.dev/packages/json_serializable). It use
+build_runner to generate files. If you make a change to these files, you need to re-run the
+generator using build_runner:
 
 ```
 flutter pub run build_runner build
@@ -153,8 +154,8 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 # Assets
 
-- Image is handled by [flutter_gen](https://pub.dev/packages/flutter_gen) for auto-complete and not have to deal with
-  typing mistakes.
+- Image is handled by [flutter_gen](https://pub.dev/packages/flutter_gen) for auto-complete and not
+  have to deal with typing mistakes.
 - To setup flutter_gen, run `dart pub global activate flutter_gen`
 
 ## Adding new Assets
@@ -169,23 +170,28 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 - Run `flutter pub run build_runner build` in console
 - `lib/gen/assets` will be updated with currently available assets.
 
+## Note when build apk release
 
-##Note when build apk release
-- Refer to this issue that if using new gradle.properties will be error while build release app.
-So that need to use older version
- + build.gradle "build:gradle:3.5.0" on android/build.gradle 
- + "gradle-5.6.2" on gradle-wrapper.properties 
+- Refer to this issue that if using new gradle.properties will be error while build release app. So
+  that need to use older version
 
-## Terminal build APK or IPA
-- run terminal build apk "flutter build apk --flavor development"
-- run terminal build ios "flutter build ios --flavor development"
-- "flutter build apk --flavor {flavorName}"
++ build.gradle "build:gradle:3.5.0" on android/build.gradle
++ "gradle-5.6.2" on gradle-wrapper.properties
 
 ## How to change version number and version code :
-- Go to pubspec.yaml => line version to change : 
+
+- Go to pubspec.yaml => line version to change :
 - Example : 1.0.10+3 => Version name : 1.0.10, Version code : 3
 
 ## Set-up Gitlab CI
+
 - Follow this link to create runner and register Runner : https://docs.gitlab.com/runner/install/
 - If runner got warning : Run this terminal to verify runner again : gitlab-runner verify
 - Remember using image : cirrusci/flutter:stable on gitlab.ci config
+
+## Step to change package name
+
+- We using library change_app_package_name for easy and fast to change all package name on android
+  and IOS
+- Using terminal : flutter pub run change_app_package_name:main "newPackageName"
+- Example : flutter pub run change_app_package_name:main com.vmo.newApp

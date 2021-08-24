@@ -12,7 +12,7 @@ class ListUserInitial extends ListUserState {
 class ShowListUser extends ListUserState {
   final List<String> listUser;
 
-  ShowListUser(this.listUser);
+  const ShowListUser(this.listUser);
 
   @override
   List<Object> get props => [listUser];

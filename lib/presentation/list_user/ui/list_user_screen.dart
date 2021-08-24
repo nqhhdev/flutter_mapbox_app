@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ListUserScreen extends StatefulWidget {
-  ListUserScreen({Key? key}) : super(key: key);
+  const ListUserScreen({Key? key}) : super(key: key);
 
   @override
   _ListUserScreenState createState() {

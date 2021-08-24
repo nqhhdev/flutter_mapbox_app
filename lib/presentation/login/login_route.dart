@@ -13,6 +13,6 @@ class LoginRoute {
             getIt<LoginRepository>(),
           ),
         ),
-        child: LoginScreen(),
+        child: const LoginScreen(),
       );
 }

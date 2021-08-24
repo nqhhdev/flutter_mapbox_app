@@ -1,40 +1,52 @@
+import 'dart:developer';
+
 import 'package:clean_architechture/config/navigation_util.dart';
 import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/app_config.dart';
-import 'generated/l10n.dart';
 import 'utils/di/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
   await Firebase.initializeApp();
   // Listen for flavor triggered by iOS / android build
   await const MethodChannel('flavor').invokeMethod<String>('getFlavor').then(
     (String? flavor) async {
       final appConfig = AppConfig.getInstance(flavorName: flavor);
-      print("App Config : ${appConfig!.apiBaseUrl}");
+      log("App Config : ${appConfig!.apiBaseUrl}");
     },
   ).catchError(
     (error) {
       AppConfig.getInstance(flavorName: "development");
 
-      print("Error when set up enviroment $error");
+      log("Error when set up enviroment $error");
     },
   );
 
   await setupInjection();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-  runApp(MyApp());
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+      fallbackLocale: const Locale('en', 'US'),
+      path: 'resources/langs/langs.csv',
+      assetLoader: CsvAssetLoader(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -74,18 +86,14 @@ class _MyAppState extends State<MyApp> {
         ],
         navigatorKey: NavigationUtil.rootKey,
         debugShowCheckedModeBanner: false,
-        initialRoute: RouteDefine.LoginScreen.name,
+        initialRoute: RouteDefine.loginScreen.name,
         onGenerateRoute: AppRouting.generateRoute,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: appTheme.currentTheme,
-        localizationsDelegates: [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
       ),
     );
   }
