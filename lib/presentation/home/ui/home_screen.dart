@@ -1,3 +1,4 @@
+import 'package:clean_architechture/config/styles.dart';
 import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/utils/di/injection.dart';
 import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.dart';
@@ -37,19 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
               "\nHeight Ratio : ${ScreenUtil().scaleHeight} "
               "\nText Ratio : ${ScreenUtil().scaleText} "
               "\n$defaultTargetPlatform",
-              style: Theme.of(context).textTheme.headline6,
+              style: AppTextStyle.label3,
             ),
           ),
           Text(
             "Aspect Ratio : ${ScreenUtil().pixelRatio}",
-            style: Theme.of(context).textTheme.bodyText1,
+            style: AppTextStyle.label3,
           ),
           Text(
             LocaleKeys.msg.tr(
               namedArgs: {"userName": "Hoang"},
               args: ["All"],
             ),
-            style: Theme.of(context).textTheme.bodyText2,
+            style: AppTextStyle.label3,
           ),
           OutlinedButton(
             onPressed: () {
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               "Get Size",
-              style: Theme.of(context).textTheme.button,
+              style: AppTextStyle.label3,
             ),
           ),
           OutlinedButton(
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               "Change Theme",
-              style: Theme.of(context).textTheme.button,
+              style: AppTextStyle.label3,
             ),
           ),
           OutlinedButton(
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               "Move To List User Screen",
-              style: Theme.of(context).textTheme.button,
+              style: AppTextStyle.label3,
             ),
           ),
         ],
