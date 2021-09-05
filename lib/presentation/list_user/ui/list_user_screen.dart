@@ -1,3 +1,4 @@
+import 'package:clean_architechture/config/styles.dart';
 import 'package:clean_architechture/presentation/list_user/bloc/list_user_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _ListUserScreenState extends State<ListUserScreen> {
       appBar: AppBar(
         title: Text(
           "List User",
-          style: Theme.of(context).textTheme.headline6,
+          style: AppTextStyle.label3,
         ),
         automaticallyImplyLeading: false,
       ),
@@ -58,7 +59,7 @@ class _ListUserScreenState extends State<ListUserScreen> {
                 itemBuilder: (context, index) => Center(
                   child: Text(
                     "User $index",
-                    style: Theme.of(context).textTheme.headline6,
+                    style: AppTextStyle.label3,
                   ),
                 ),
                 separatorBuilder: (context, index) => const Divider(),

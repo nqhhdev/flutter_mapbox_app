@@ -6,9 +6,11 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:clean_architechture/config/theme.dart';
-import 'package:clean_architechture/main.dart';
+import 'package:clean_architechture/presentation/home/ui/home_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+
+import 'utilities/test_utilitiy.dart';
 
 void main() {
   setUpAll(() {
@@ -18,9 +20,15 @@ void main() {
   });
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(
+      const TestWidgetWrapper(
+        child: HomeScreen(),
+      ),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('1'), findsNothing);
+    expect(find.text('Get Size'), findsOneWidget);
+    expect(find.text('Change Theme'), findsOneWidget);
   });
 }

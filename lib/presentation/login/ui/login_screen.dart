@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:clean_architechture/config/app_config.dart';
+import 'package:clean_architechture/config/styles.dart';
 import 'package:clean_architechture/gen/assets.gen.dart';
 import 'package:clean_architechture/presentation/common/dialog/loading_dialog.dart';
 import 'package:clean_architechture/presentation/login/bloc/login_bloc.dart';
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: Text(
                   "Login Screen ${LocaleKeys.title.tr()} ${Intl.getCurrentLocale()} ${AppConfig.getInstance()!.appFlavor}",
-                  style: Theme.of(context).textTheme.headline5,
+                  style: AppTextStyle.label3,
                 ),
               ),
               MaterialButton(
@@ -60,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   "Login",
-                  style: Theme.of(context).textTheme.headline6,
+                  style: AppTextStyle.label3,
                 ),
               ),
               const SizedBox(
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   "Login Error",
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: AppTextStyle.label3,
                 ),
               ),
               const SizedBox(
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   "Change Locale to Viet Nam",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: AppTextStyle.label3,
                 ),
               ),
               Assets.images.cashIcon1.svg(),
