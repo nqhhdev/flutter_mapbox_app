@@ -52,3 +52,4 @@ pubspec.lock
 *.g.dart
 /lib/gen/
 coverage/lcov.info
+/ios/build
