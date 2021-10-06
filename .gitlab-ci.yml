@@ -11,11 +11,10 @@ variables:
 
 .before_script_template: &mobileBeforeScript
   before_script:
+    - flutter clean
     - flutter pub get
-    - flutter pub run build_runner build --delete-conflicting-outputs
     - flutter pub global activate pubspec_version
-    - flutter pub global activate intl_utils
-    - flutter pub global run intl_utils:generate
+    - flutter pub run build_runner build --delete-conflicting-outputs
     - FLUTTER_VERSION=`flutter pub global run pubspec_version:pubver get`
     - export BUILD_VERSION=$(echo $FLUTTER_VERSION | cut -d "+" -f1)
     - export BUILD_NUMBER=$(echo $FLUTTER_VERSION | cut -d "+" -f2)
