@@ -4,19 +4,22 @@ A new Flutter application with clean architechture
 
 ## Getting Started
 
-###Configuration Environment Running
-- ANDROID STUDIO
-  Step 1 : Open " Run => Edit Configuration in Android Studio"
+### Configuration Environment Running
+
+- ANDROID STUDIO Step 1 : Open " Run => Edit Configuration in Android Studio"
 
 Step 2 : Create new Configuration with build flavor value is :
+
 + Develop Environment : development
 + Staging Environment : staging
 + Production Environment : production
 
-###Build APK
+### Build APK
+
 - flutter build apk --flavor {flavorOnStep2}
 
-###Build IPA without archive on Xcode
+### Build IPA without archive on Xcode
+
 - flutter build ipa --flavor {flavorOnStep2} --export-options-plist=ios/Runner/ExportOptions.plist
 
 ### These step need to run before can run app in code
@@ -110,7 +113,7 @@ For non widget usage, manually inject the object on initialization.
 We are using Easy Localization to handle multi-languages. Using google sheet file on cloud will take
 less effort for change and update key and value. Only need update in google sheet file.
 
-Google sheet sample on this project : 
+Google sheet sample on this project :
 "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE/edit#gid=1013756643"
 
 Step to set-up google sheet :
@@ -118,19 +121,21 @@ Step to set-up google sheet :
 - 1 : Create a CSV Google Sheet with form like that form
   "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE/edit#gid=1013756643"
 - 2 : Enable share for anyone have this link
-- 3 : on file locale_keys.dart in lib/utils/multi-languages/locale_keys.dart change docId annotation with
-  your google sheet docid Example of DocID is :
+- 3 : on file locale_keys.dart in lib/utils/multi-languages/locale_keys.dart change docId annotation
+  with your google sheet docid Example of DocID is :
   "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE (it's docId)
   /edit#gid=1013756643"
 - 4 : run terminal : "flutter pub run build_runner build" to generate .g.dart localization file
-- 5 : When update new value on google sheet should run "flutter packages pub run build_runner build" again to get new file csv
+- 5 : When update new value on google sheet should update plus one version on SheetLocalization at
+  locale_keys.dart and run "flutter packages pub run build_runner build" again to get new file csv
 
-Step to use multi-languages import in code: 
+Step to use multi-languages import in code:
 
 - Remember import file "multi_languages_utils.dart" instead of "locale_keys.dart" because first file
-already import library easy_localization extension,you no need to use 2 import
-  
-- Using : LocaleKeys.keyDefine.tr()  (tr() is using to change languages with current languages setup, remember have it)  
+  already import library easy_localization extension,you no need to use 2 import
+
+- Using : LocaleKeys.keyDefine.tr()  (tr() is using to change languages with current languages
+  setup, remember have it)
 
 Link library : https://pub.dev/packages/easy_localization
 Link plugin generate csv from google
