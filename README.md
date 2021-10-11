@@ -1,8 +1,13 @@
-# clean_architechture
+# clean_architecture
 
-A new Flutter application with clean architechture
+A new Flutter application with clean architecture
 
 ## Getting Started
+
+- Flutter version using : 2.5.2 (stable at 8/10/2021)
+- Dart version using : 2.14.3
+- Platform android : 30, Build-tools : 30.0.2
+- Java version OpenJDK 11.0.10
 
 ### Configuration Environment Running
 
