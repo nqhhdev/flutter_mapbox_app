@@ -35,6 +35,7 @@ test:
     - /^bugfix/.*$/
     - /^feature/.*$/
     - /^hotfix/.*$/
+    - /^update/.*$/
     - develop
 
 build_android_dev: #Job name
@@ -123,6 +124,7 @@ build_android_dev: #Job name
     - /^bugfix/.*$/
     - /^feature/.*$/
     - /^hotfix/.*$/
+    - /^update/.*$/
     - develop
 
 build_android_staging:
@@ -358,4 +360,5 @@ deploy_android_production:
     - /^bugfix/.*$/
     - /^feature/.*$/
     - /^hotfix/.*$/
+    - /^update/.*$/
     - develop
