@@ -6,7 +6,6 @@ import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization_loader/easy_localization_loader.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +49,8 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance);
 
   @override
   _MyAppState createState() => _MyAppState();

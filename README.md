@@ -4,8 +4,8 @@ A new Flutter application with clean architecture
 
 ## Getting Started
 
-- Flutter version using : 2.5.2 (stable at 8/10/2021)
-- Dart version using : 2.14.3
+- Flutter version using : 2.8.1 (stable at 4/1/2022)
+- Dart version using : 2.15.1
 - Platform android : 30, Build-tools : 30.0.2
 - Java version OpenJDK 11.0.10
 

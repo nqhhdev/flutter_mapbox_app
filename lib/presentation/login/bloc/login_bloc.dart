@@ -14,7 +14,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc(this.loginUseCase) : super(LoginInitial());
 
-  @override
+  ///Please using new version implement of bloc
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
