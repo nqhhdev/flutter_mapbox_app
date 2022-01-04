@@ -25,7 +25,7 @@ test:
   stage: test
   when: always
   tags:
-    - vmo
+    - vmogroup
 
   <<: *mobileBeforeScript
 
@@ -119,7 +119,7 @@ build_android_dev: #Job name
     paths:
       - build/app/outputs/flutter-apk/app-development-release.apk
   tags:
-    - vmo
+    - vmogroup
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/
@@ -208,7 +208,7 @@ build_android_staging:
     paths:
       - build/app/outputs/flutter-apk/app-staging-release.apk
   tags:
-    - vmo
+    - vmogroup
   only:
     - /^release/.*$/
 
@@ -225,7 +225,7 @@ deploy_android_staging:
     - appcenter apps set-current $APP_CENTER_PROJECT_NAME
     - appcenter distribute release -f build/app/outputs/flutter-apk/app-staging-release.apk -g Collaborators
   tags:
-    - vmo
+    - vmogroup
   only:
     - /^release/.*$/
 
@@ -310,7 +310,7 @@ build_android_production:
     paths:
       - build/app/outputs/flutter-apk/app-production-release.apk
   tags:
-    - vmo
+    - vmogroup
   only:
     - master
 
@@ -327,7 +327,7 @@ deploy_android_production:
     - appcenter apps set-current $APP_CENTER_PROJECT_NAME
     - appcenter distribute release -f build/app/outputs/flutter-apk/app-production-release.apk -g Collaborators
   tags:
-    - vmo
+    - vmogroup
   only:
     - master
 
@@ -355,7 +355,7 @@ deploy_android_production:
     paths:
       - ios/build/Runner.ipa
   tags:
-    - vmo
+    - vmogroup
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/

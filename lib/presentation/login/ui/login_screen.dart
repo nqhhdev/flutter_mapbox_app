@@ -9,7 +9,6 @@ import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.
 import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

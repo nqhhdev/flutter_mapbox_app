@@ -1,6 +1,5 @@
 import 'package:clean_architechture/config/navigation_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LoadingDialog {
   static void get hideLoadingDialog {
