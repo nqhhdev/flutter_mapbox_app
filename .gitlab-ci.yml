@@ -127,6 +127,33 @@ build_android_dev: #Job name
     - /^update/.*$/
     - develop
 
+diawi_android_dev: #Job name
+  stage: build # kind of job
+  when: manual
+  allow_failure: true #Make to skip build step and deploy step
+
+  <<: *mobileBeforeScript
+
+  script:
+    # These step is set-up for distribute to slack app and google chat
+    - export BUILD_FLAVOR="Dev"
+    - export BUILD_FLAVOR_KEY="development"
+    - echo BRANCH_NAME=$CI_BUILD_REF_NAME >> fastlane/.env
+    - echo COMMIT_TITLE=$CI_COMMIT_TITLE >> fastlane/.env
+    - echo USER_PERFORM=$GITLAB_USER_NAME >> fastlane/.env
+    - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
+    - echo After build
+    - gem install bundler:2.2.29
+    - fastlane buildAndroid --env $BUILD_FLAVOR_KEY
+
+  tags:
+    - vops-runner
+  only:
+    - /^bugfix/.*$/
+    - /^feature/.*$/
+    - /^hotfix/.*$/
+    - develop
+
 build_android_staging:
   stage: build
   when: manual
@@ -211,6 +238,33 @@ build_android_staging:
     - vmogroup
   only:
     - /^release/.*$/
+
+diawi_android_staging: #Job name
+  stage: build # kind of job
+  when: manual
+  allow_failure: true #Make to skip build step and deploy step
+
+  <<: *mobileBeforeScript
+
+  script:
+    # These step is set-up for distribute to slack app and google chat
+    - export BUILD_FLAVOR="Staging"
+    - export BUILD_FLAVOR_KEY="staging"
+    - echo BRANCH_NAME=$CI_BUILD_REF_NAME >> fastlane/.env
+    - echo COMMIT_TITLE=$CI_COMMIT_TITLE >> fastlane/.env
+    - echo USER_PERFORM=$GITLAB_USER_NAME >> fastlane/.env
+    - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
+    - echo After build
+    - gem install bundler:2.2.29
+    - fastlane buildAndroid --env $BUILD_FLAVOR_KEY
+
+  tags:
+    - vops-runner
+  only:
+    - /^bugfix/.*$/
+    - /^feature/.*$/
+    - /^hotfix/.*$/
+    - develop
 
 deploy_android_staging:
   image: node:latest
