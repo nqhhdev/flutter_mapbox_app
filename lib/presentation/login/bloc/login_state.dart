@@ -15,6 +15,10 @@ class LoginSuccessState extends LoginState {
 }
 
 class LoginErrorState extends LoginState {
+  final String errorMessage;
+
+  const LoginErrorState(this.errorMessage);
+
   @override
   List<Object> get props => [];
 }
