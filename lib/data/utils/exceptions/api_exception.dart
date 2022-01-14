@@ -1,108 +1,117 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.dart';
 import 'package:dio/dio.dart';
 
 class ApiException {
-  String? errorCode;
-  String? errorMessage = "";
-  int? statusCode;
-  late DioError exception;
+  final int errorCode;
+  final String errorMessage;
+  final Object exception;
+  final DioError? networkError;
 
-  String get displayError {
-    if (exception.type == DioErrorType.connectTimeout) {
-      return LocaleKeys.connectTimeout.tr();
-    }
+  ApiException._({
+    this.errorCode = 0,
+    this.errorMessage = '',
+    required this.exception,
+  }) : networkError = exception is DioError ? exception : null;
 
-    if (exception.type == DioErrorType.receiveTimeout) {
-      return LocaleKeys.receiveTimeout.tr();
-    }
+  String get displayError => toBeginningOfSentenceCase(errorMessage) ?? '';
 
-    if (exception.type == DioErrorType.sendTimeout) {
-      return LocaleKeys.sendTimeout.tr();
-    }
-
-    if (exception.type == DioErrorType.other) {
-      if (exception.error is SocketException) {
-        return LocaleKeys.pleaseCheckYourInternetConnection.tr();
-      }
-      return exception.error.toString();
-    }
-
-    // Prioritize error returned in response body
-    final responseData = exception.response?.data;
-
-    if (responseData is Map && responseData["message"] != null) {
-      return responseData["message"].toString();
-    }
-
-    // Fallback to request error if no error returned in response body
-    return errorMessage!;
+  factory ApiException.error(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) {
+    // logger.e('ApiException.error:', error, stackTrace);
+    if (error is DioError) return ApiException(exception: error);
+    return ApiException._(
+      exception: error,
+      errorCode: 0,
+      errorMessage: LocaleKeys.pleaseCheckYourInternetConnection,
+    );
   }
 
-  ApiException({required this.exception}) {
+  factory ApiException({required DioError exception}) {
     switch (exception.type) {
       case DioErrorType.response:
-        {
-          dynamic errorBody = exception.response?.data;
-
-          try {
-            errorMessage = errorBody['message'];
-            errorCode = errorBody['errorCode'];
-          } catch (e) {
-            errorMessage = e.toString();
-
-            // Try to get Dio internal error which might due to service not available
-            if (exception.error != null) {
-              errorMessage = exception.error.toString();
-            }
-
-            if (exception.response?.statusMessage != null &&
-                exception.response!.statusMessage!.isNotEmpty) {
-              errorMessage = exception.response?.statusMessage;
-            }
-
-            try {
-              final _errBody = jsonDecode(errorBody);
-
-              statusCode = _errBody['statusCode'];
-              if (_errBody['message'] is List) {
-                errorMessage = _errBody['message'][0];
-              } else {
-                errorMessage = _errBody['message'];
-              }
-            } catch (e) {
-              throw Exception(e);
-            }
-          }
-        }
-        break;
+        return _handleErrorWithResponse(exception);
+      case DioErrorType.cancel:
+        return ApiException._(
+          exception: exception,
+          errorMessage: LocaleKeys.cancelled,
+        );
+      case DioErrorType.connectTimeout:
+      case DioErrorType.receiveTimeout:
+      case DioErrorType.sendTimeout:
+        return ApiException._(
+          exception: exception,
+          errorMessage: _timeOutMessages[exception.type]!,
+        );
       default:
-        {
-          switch (exception.type) {
-            case DioErrorType.cancel:
-              {
-                errorMessage = LocaleKeys.cancelled.tr();
-                break;
-              }
-            case DioErrorType.connectTimeout:
-            case DioErrorType.receiveTimeout:
-            case DioErrorType.sendTimeout:
-              {
-                errorMessage = LocaleKeys.connectTimeout.tr();
-              }
-              break;
-            default:
-              {
-                if (exception.error is SocketException) {
-                  errorMessage = LocaleKeys.connectionProblem.tr();
-                } else if (exception.error is HttpException) {
-                  errorMessage = LocaleKeys.connectionProblem.tr();
-                }
-              }
-          }
+        if (exception.error is SocketException ||
+            exception.error is HttpException) {
+          return ApiException._(
+            exception: exception,
+            errorMessage: LocaleKeys.connectionProblem,
+          );
+        }
+        if (exception.error != null) {
+          return ApiException._(
+            exception: exception,
+            errorMessage: exception.error.toString(),
+          );
         }
     }
+
+    return ApiException._(exception: exception);
   }
 }
+
+/// Checking for 'error' and 'message' type of List is something that is
+/// already done previously. Not sure where does it impact on the whole
+/// application but we'll keep it for now.
+ApiException _handleErrorWithResponse(DioError exception) {
+  try {
+    final errorBody = exception.response!.data;
+
+    if (errorBody is Map && errorBody['message'] is List) {
+      final message = errorBody['message'] as List;
+      final errorMessages = message
+          .map((e) => toBeginningOfSentenceCase(e.toString()))
+          .join("\n");
+
+      return ApiException._(
+        exception: exception,
+        errorMessage: errorMessages,
+        errorCode: errorBody['statusCode'],
+      );
+    }
+
+    return ApiException._(
+      exception: exception,
+      errorMessage: errorBody['message'] ?? 'N/A',
+      errorCode:
+          errorBody['statusCode'] ?? exception.response!.statusCode.toString(),
+    );
+  } catch (e) {
+    // try to get Dio internal error which might due to service not available
+    if (exception.response!.statusMessage != null &&
+        exception.response!.statusMessage!.isNotEmpty) {
+      return ApiException._(
+        exception: exception,
+        errorMessage: exception.response!.statusMessage.toString(),
+        errorCode: exception.response?.statusCode ?? 0,
+      );
+    }
+
+    return ApiException._(
+      exception: exception,
+      errorMessage: e.toString(),
+    );
+  }
+}
+
+final _timeOutMessages = {
+  DioErrorType.connectTimeout: LocaleKeys.connectTimeout,
+  DioErrorType.receiveTimeout: LocaleKeys.receiveTimeout,
+  DioErrorType.sendTimeout: LocaleKeys.sendTimeout,
+};
