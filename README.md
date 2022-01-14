@@ -205,3 +205,13 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
   and IOS
 - Using terminal : flutter pub run change_app_package_name:main "newPackageName"
 - Example : flutter pub run change_app_package_name:main com.vmo.newApp
+
+## Using fastlane
+
+- Require JAVAHOME
+- Install Ruby (https://docs.fastlane.tools/)
+- gem install bundler (First time run)
+- bundle install (First time run)
+- bundle exec fastlane android buildAndroidLocal --env development (Development environment)
+- bundle exec fastlane android buildAndroidLocal --env staging (Staging environment)
+- bundle exec fastlane android buildAndroidLocal (Production environment)

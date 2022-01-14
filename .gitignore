@@ -54,3 +54,7 @@ pubspec.lock
 coverage/lcov.info
 /ios/build
 /resources/
+
+.firebase
+Gemfile.lock
+fastlane/report.xml
