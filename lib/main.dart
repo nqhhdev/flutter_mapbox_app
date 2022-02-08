@@ -78,6 +78,10 @@ class _MyAppState extends State<MyApp> {
     return ScreenUtilInit(
       designSize: const Size(400, 800),
       builder: () => MaterialApp(
+        builder: (context, child) {
+          ScreenUtil.setContext(context);
+          return child ?? const SizedBox();
+        },
         title: 'Flutter Demo',
         navigatorObservers: <NavigatorObserver>[
           MyApp.observer,

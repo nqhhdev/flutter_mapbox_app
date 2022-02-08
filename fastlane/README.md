@@ -31,13 +31,13 @@ Submit a new Beta Build to Crashlytics Beta
 
 Deploy a new version to the Google Play
 
-### android buildAndroid
+### android sendBuildToGoogleChat
 
 ```sh
-[bundle exec] fastlane android buildAndroid
+[bundle exec] fastlane android sendBuildToGoogleChat
 ```
 
-Build Android Version Development
+Send Build Android Version Development
 
 ### android buildAndroidLocal
 

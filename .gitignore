@@ -58,3 +58,5 @@ coverage/lcov.info
 .firebase
 Gemfile.lock
 fastlane/report.xml
+.fvm/flutter_sdk
+*.stackdump

@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               MaterialButton(
                 onPressed: () async {
-                  context.setLocale(const Locale("vi","VN"));
+                  context.setLocale(const Locale("vi", "VN"));
                   log("Result : ${Intl.getCurrentLocale()}");
                   setState(() {});
                 },
