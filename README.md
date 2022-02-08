@@ -4,10 +4,10 @@ A new Flutter application with clean architecture
 
 ## Getting Started
 
-- Flutter version using : 2.8.1 (stable at 4/1/2022)
-- Dart version using : 2.15.1
-- Platform android : 30, Build-tools : 30.0.2
-- Java version OpenJDK 11.0.10
+- Flutter version using : 2.10.0 (stable at 3/2/2022)
+- Dart version using : 2.16.0
+- Platform android : 31, Build-tools : 30.0.2
+- Java version OpenJDK 11.0.11+9
 
 ### Configuration Environment Running
 
@@ -27,18 +27,9 @@ Step 2 : Create new Configuration with build flavor value is :
 
 - flutter build ipa --flavor {flavorOnStep2} --export-options-plist=ios/Runner/ExportOptions.plist
 
-### These step need to run before can run app in code
+### Command need to run before run app
 
-Step 1 : run terminal "flutter clean"
-
-Step 2 : run terminal "flutter pub get"
-
-- Assets,Json , multi-languages generate
-
-  Step 3 : run terminal "dart pub global activate flutter_gen"
-
-Step 4 : run terminal "flutter packages pub run build_runner build"
-or run terminal "flutter packages pub run build_runner build --delete-conflicting-outputs" if error
+- Please run script ".setup_app.sh" in terminal
 
 ### Project architecture (Clean Architecture Approach)
 
@@ -74,6 +65,72 @@ or run terminal "flutter packages pub run build_runner build --delete-conflictin
     1. https://github.com/ResoCoder/flutter-tdd-clean-architecture-course
     2. https://github.com/ShadyBoukhary/flutter_clean_architecture (We don't use this plugin)
     3. https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+
+
+## Project Structure
+
+```
+project
+|--.fvm                                              # fvm config using for project
+|   |--fvm_config.json                               # config file
+|--android                                           # android project dir
+|--assets                                            # application all assets
+|   |--images                                        # application image assets
+|   |--fonts                                         # application font assets
+|--ios                                               # ios dir
+|--lib                                               # main project dart lib entry point
+|   |--config                                        # configuration for project
+|   |   |--app_config.dart                           # config enum flavor and baseURL (development, staging, production)
+|   |   |--colors.dart                               # config for color
+|   |   |--navigation_util.dart                      # config navigation key and nested navigation key
+|   |   |--styles.dart                               # config for text styles
+|   |   |--theme.dart                                # config for theme for project
+|   |--core                                          # core project include string extension, int extension, double extension,... 
+|   |   |--string.dart                               # string extension function
+|   |   |--double.dart                               # double extension function
+|   |--data                                          # data layer for clean architecture 
+|   |   |--login                                     # login feature folder
+|   |   |   |--api                                   # api folder
+|   |   |   |   |--login_api.dart                    # login abstract class for retrofit
+|   |   |   |   |--login_api.g.dart                  # login generator class for retrofit
+|   |   |   |--models                                # models folder for data layer
+|   |   |   |   |--request                           # request model folder
+|   |   |   |   |--response                          # response model folder
+|   |   |   |--repositories                          # repositories folder for data layer
+|   |   |   |   |--login_repository_impl             # repository impl will extend from login_repository abstract class
+|   |   |--utils                                     # utils for data layer
+|   |   |   |--exceptions                            # custom exception for data layer
+|   |   |   |--share_pref_manager.dart               # Share preferences manager class (include share preferences key enum)
+|   |--domain                                        # domain layer for clean architecture 
+|   |   |--login                                     # login domain feature folder
+|   |   |   |--entities                              # entities folder
+|   |   |   |   |--user_entity.dart                  # user entity will extends from login_response.dart
+|   |   |   |--repositories                          # abstract class for login feature
+|   |   |   |--usecases                              # usecases for login feature
+|   |--presentation                                  # presentation layer for clean architecture 
+|   |   |--common                                    # common widget or common screen
+|   |   |--login                                     # login presentation layer
+|   |   |   |--bloc                                  # login bloc for whole login screen
+|   |   |   |--ui                                    # ui folder for login feature
+|   |   |   |   |--login_screen.dart                 # login ui frame
+|   |   |   |   |--widgets                           # widgets folder for nested widget in login feature
+|   |   |   |--login_route.dart                      # login route class define BlocProvider for Bloc class of login feature
+|   |--utils                                         # utility folder for project
+|   |   |--di                                        # dependencies injection registration for project
+|   |   |--multi-languages                           # localization for project, using easy_localization and google sheet generator csv
+|   |   |--route                                     # route config for project, include generateRoute and route define all screen of project
+|   |   |--session_utils.dart                        # session utility for project like getAccessToken or something using common most
+|   |--main.dart                                     # main config Material App and runApp
+|--test                                              # unit test
+|--web
+|--.gitignore                                        # ignore file of git
+|--fastlane                                          # config ci/cd using fastlane
+|--README.md                                         # ReadMe for this project
+|--analysis_options.yaml                             # lint rule configuration, config rule here
+|--.gitlab-ci.yml                                    # config ci/cd for gitlab
+|--pubspec.yaml                                      # dart package management file, add new dependencies here
+|--.setup_app.sh                                     # Script to set up app before run app
+```
 
 ## Injections
 
@@ -159,7 +216,7 @@ flutter pub run build_runner build
 generator using build_runner and remove conflict file :
 
 ```
-flutter packages pub run build_runner build --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 # Assets

@@ -42,8 +42,8 @@ platform :android do
     upload_to_play_store
   end
 
-    desc "Build Android Version #{FLAVOR}"
-    lane :buildAndroid do
+    desc "Send Build Android Version #{FLAVOR}"
+    lane :sendBuildToGoogleChat do
        diawi( token: ENV['DIAWI_TOKEN'],file: "#{BUILD_PATH_DEFAULT}")
        google_chat(
              webhook: ENV['GOOGLE_CHAT_URL'],
