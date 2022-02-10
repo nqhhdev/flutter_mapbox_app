@@ -4,3 +4,4 @@
 
 gem 'fastlane-plugin-diawi'
 gem 'fastlane-plugin-google_chat'
+gem 'fastlane-plugin-firebase_app_distribution'

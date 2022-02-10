@@ -60,3 +60,4 @@ Gemfile.lock
 fastlane/report.xml
 .fvm/flutter_sdk
 *.stackdump
+fastlane/.env.

@@ -23,7 +23,6 @@ COMMIT_TITLE = ENV['COMMIT_TITLE']
 APP_NAME = ENV['APP_ANDROID_NAME']
 
 BUILD_PATH_DEFAULT = "build/app/outputs/flutter-apk/app-#{PREFIX}-release.apk"
-BUILD_PATH_UPLOAD =  "build/app/outputs/flutter-apk/#{ENV['APP_ANDROID_NAME']}-#{FLAVOR}"
 GRADLE_PATH = './android'
 
 platform :android do
@@ -47,8 +46,8 @@ platform :android do
        diawi( token: ENV['DIAWI_TOKEN'],file: "#{BUILD_PATH_DEFAULT}")
        google_chat(
              webhook: ENV['GOOGLE_CHAT_URL'],
-             title: 'Build Android #{FLAVOR}',
-             description: 'Perform by #{USER_PERFORM}',
+             title: "Build Android #{FLAVOR}",
+             description: "Perform by #{USER_PERFORM}",
              buttonTitle: "DOWNLOAD",
              section1Title:"Branch #{BRANCH_NAME}",
              section1Description:"Commit #{COMMIT_TITLE}",
@@ -71,5 +70,15 @@ platform :android do
                  buttonUrl: lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI],
                  imageUrl: ENV['IMAGE_URL']
                )
+        end
+
+     desc "Distribute To Firebase"
+        lane :distribute do
+          firebase_app_distribution(
+            app: ENV['FIREBASE_APP_ID'],
+            groups: "testers",
+            apk_path: "#{BUILD_PATH_DEFAULT}",
+            firebase_cli_token: ENV['FIREBASE_TOKEN']
+          )
         end
 end

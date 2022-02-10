@@ -272,3 +272,4 @@ flutter pub run build_runner build --delete-conflicting-outputs
 - bundle exec fastlane android buildAndroidLocal --env development (Development environment)
 - bundle exec fastlane android buildAndroidLocal --env staging (Staging environment)
 - bundle exec fastlane android buildAndroidLocal (Production environment)
+- bundle exec fastlane android distribute --env development (Development environment Distribute)

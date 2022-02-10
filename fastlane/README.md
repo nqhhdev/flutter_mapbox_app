@@ -47,6 +47,14 @@ Send Build Android Version Development
 
 Build Android Version Local
 
+### android distribute
+
+```sh
+[bundle exec] fastlane android distribute
+```
+
+Distribute To Firebase
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
