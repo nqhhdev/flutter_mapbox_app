@@ -28,6 +28,7 @@ test:
   <<: *mobileBeforeScript
 
   script:
+    - flutter format . --set-exit-if-changed
     - flutter analyze
   only:
     - /^bugfix/.*$/
