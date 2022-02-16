@@ -5,10 +5,6 @@ stages:
   - build
   - deploy
 
-variables:
-  CHAT_URL: 'https://chat.googleapis.com/v1/spaces/AAAAiFGqEtI/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=1aXfezwABkyn66A86_NutUNB1Yei2KsrYE2vmTwnbWk%3D'
-  CONTENT: 'Content-Type: application/json'
-
 .before_script_template: &mobileBeforeScript
   before_script:
     - sh .setup_app.sh
@@ -138,14 +134,8 @@ diawi_android_dev: #Job name
     # These step is set-up for distribute to slack app and google chat
     - export BUILD_FLAVOR="Dev"
     - export BUILD_FLAVOR_KEY="development"
-    - echo Bracn name $CI_BUILD_REF_NAME
-    - echo Commit title $CI_COMMIT_TITLE
-    - echo User name $GITLAB_USER_NAME
-    - echo BRANCH_NAME=$CI_BUILD_REF_NAME >> fastlane/.env.$BUILD_FLAVOR_KEY
-    - echo COMMIT_TITLE=$CI_COMMIT_TITLE >> fastlane/.env.$BUILD_FLAVOR_KEY
-    - echo USER_PERFORM=$GITLAB_USER_NAME >> fastlane/.env.$BUILD_FLAVOR_KEY
+    - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
     - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
-    - echo After build
     - sh .setup_fastlane.sh
     - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
 
@@ -170,9 +160,8 @@ diawi_android_staging: #Job name
     # These step is set-up for distribute to slack app and google chat
     - export BUILD_FLAVOR="Staging"
     - export BUILD_FLAVOR_KEY="staging"
-    - sh .setup_env.sh $BUILD_FLAVOR_KEY
+    - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
     - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
-    - echo After build
     - sh .setup_fastlane.sh
     - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
 
