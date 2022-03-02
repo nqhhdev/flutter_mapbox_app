@@ -47,7 +47,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.hoangnh.clean_architechture"
+        applicationId "com.vmo.c3FlutterTemp"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
@@ -62,18 +62,18 @@ android {
 
     flavorDimensions "default"
     productFlavors {
-        development {
+        dev {
             applicationIdSuffix ".dev"
             versionNameSuffix = "-dev"
             resValue "string", "app_name", "App Name Dev"
         }
-        staging {
-            applicationIdSuffix ".staging"
-            versionNameSuffix = "-staging"
+        stag {
+            applicationIdSuffix ".stag"
+            versionNameSuffix = "-stag"
             resValue "string", "app_name", "App Name Stg"
         }
-        production {
-            versionNameSuffix = "-production"
+        prod {
+            versionNameSuffix = "-prod"
             resValue "string", "app_name", "App Name"
         }
     }

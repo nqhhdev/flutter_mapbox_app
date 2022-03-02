@@ -37,7 +37,7 @@ Deploy a new version to the Google Play
 [bundle exec] fastlane android sendBuildToGoogleChat
 ```
 
-Send Build Android Version Development
+Send Build Android Version Dev
 
 ### android buildAndroidLocal
 
@@ -54,6 +54,35 @@ Build Android Version Local
 ```
 
 Distribute To Firebase
+
+----
+
+
+## iOS
+
+### ios buildIOS
+
+```sh
+[bundle exec] fastlane ios buildIOS
+```
+
+Build app dev ios
+
+### ios testFlightDistribute
+
+```sh
+[bundle exec] fastlane ios testFlightDistribute
+```
+
+TestFlight dev ios
+
+### ios getProvision
+
+```sh
+[bundle exec] fastlane ios getProvision
+```
+
+Get provision dev ios
 
 ----
 
