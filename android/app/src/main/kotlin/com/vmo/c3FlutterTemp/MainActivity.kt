@@ -1,7 +1,7 @@
-package com.hoangnh.clean_architechture
+package com.vmo.c3FlutterTemp
 
 import android.os.Bundle
-import com.hoangnh.clean_architechture.BuildConfig.FLAVOR
+import com.vmo.c3FlutterTemp.BuildConfig.FLAVOR
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 

@@ -17,9 +17,12 @@ stages:
 
 test:
   stage: test
-  when: always
+  when: manual
   tags:
     - vmogroup
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.pub-cache/
 
   <<: *mobileBeforeScript
 
@@ -33,109 +36,23 @@ test:
     - /^update/.*$/
     - develop
 
-.build_android_dev: #Job name
-  stage: build # kind of job
-  when: manual
-  allow_failure: true #Make to skip build step and deploy step
-
-  <<: *mobileBeforeScript
-
-  script:
-    # These step is set-up for distribute to slack app and google chat
-    - export BUILD_FLAVOR="Dev"
-    - export BUILD_FLAVOR_KEY="development"
-    - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
-    #    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for Android is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download APK","url":"'$CI_JOB_URL'/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"}],"pretext":"New Android build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
-    #    - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
-    - |-
-      PAYLOAD=$(cat << JSON
-      {
-      "cards": [
-        {
-          "sections": [
-            {
-              "widgets": [
-                {
-                  "keyValue": {
-                    "topLabel": "<b>Branch</b>",
-                    "content": "$CI_BUILD_REF_NAME",
-                    "contentMultiline": "true",
-                  }
-                },
-                {
-                  "keyValue": {
-                    "topLabel": "<b>Commit</b>",
-                    "content": "$CI_COMMIT_TITLE",
-                    "contentMultiline": "false",
-                    "bottomLabel": "By <b>$GITLAB_USER_NAME</b>"
-                  }
-                },
-                {
-                  "keyValue": {
-                    "topLabel": "<b>Build version</b> $BUILD_VERSION",
-                    "content": "<b>Build number</b> $BUILD_NUMBER",
-                    "contentMultiline": "false",
-                    "bottomLabel": "<b>Flavor</b> $BUILD_FLAVOR_KEY"
-                  }
-                }
-              ]
-            },
-            {
-              "widgets": [
-                {
-                  "buttons": [
-                    {
-                      "textButton": {
-                        "text": "<b>DOWNLOAD HERE</b>",
-                        "onClick": {
-                          "openLink": {
-                            "url": "$CI_JOB_URL/artifacts/raw/build/app/outputs/flutter-apk/app-development-release.apk"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-      }
-      JSON
-      )
-    - echo "$PAYLOAD"
-    - >
-      http_response=$(curl --location --request POST "${CHAT_URL}"
-      --header "${CONTENT}"
-      --data-raw "${PAYLOAD}")
-
-  artifacts:
-    paths:
-      - build/app/outputs/flutter-apk/app-development-release.apk
-  tags:
-    - vmogroup
-  only:
-    - /^bugfix/.*$/
-    - /^feature/.*$/
-    - /^hotfix/.*$/
-    - /^update/.*$/
-    - develop
-
 diawi_android_dev: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
   needs: [test]
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.pub-cache/
 
   <<: *mobileBeforeScript
 
   script:
     # These step is set-up for distribute to slack app and google chat
     - export BUILD_FLAVOR="Dev"
-    - export BUILD_FLAVOR_KEY="development"
+    - export BUILD_FLAVOR_KEY="dev"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
-    - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
+    - sh .build_android.sh
     - sh .setup_fastlane.sh
     - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
 
@@ -153,21 +70,24 @@ diawi_android_staging: #Job name
   when: manual
   allow_failure: true #Make to skip build step and deploy step
   needs: [test]
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.pub-cache/
 
   <<: *mobileBeforeScript
 
   script:
     # These step is set-up for distribute to slack app and google chat
-    - export BUILD_FLAVOR="Staging"
-    - export BUILD_FLAVOR_KEY="staging"
+    - export BUILD_FLAVOR="Stag"
+    - export BUILD_FLAVOR_KEY="stag"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
-    - flutter build apk --flavor $BUILD_FLAVOR_KEY --build-number $BUILD_NUMBER
+    - sh .build_android.sh $BUILD_FLAVOR_KEY
     - sh .setup_fastlane.sh
     - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
 
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/app-staging-release.apk
+      - build/app/outputs/flutter-apk/app-stag-release.apk
   tags:
     - vops-runner
   only:
@@ -184,7 +104,7 @@ firebase_android_staging:
   dependencies:
     - diawi_android_staging
   script:
-    - export BUILD_FLAVOR_KEY="staging"
+    - export BUILD_FLAVOR_KEY="stag"
     - sh .setup_fastlane.sh
     - bundle exec fastlane distribute --env $BUILD_FLAVOR_KEY
   tags:
@@ -194,34 +114,54 @@ firebase_android_staging:
     - /^update/.*$/
     - /^hotfix/.*$/
 
-.build_ios_dev:
+diawi_ios_dev: #Job name
+  stage: build # kind of job
   when: manual
-  stage: build
-  allow_failure: true
-  #  needs:
-  #    - test
+  allow_failure: true #Make to skip build step and deploy step
+  needs: [test]
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.pub-cache/
 
   <<: *mobileBeforeScript
 
   script:
     - export BUILD_FLAVOR="Dev"
-    - export BUILD_FLAVOR_KEY="development"
-    - export PAYLOAD=$(echo 'payload={"username":"Flutter Temp","attachments":[{"fallback":"New app build for IOS is out!", "actions":[{"type":"button","text":"See Commits","url":"https://git.vmo.dev/c3/flutter-temp/commits/'$CI_BUILD_REF_NAME'#commit-'$CI_COMMIT_SHORT_SHA'"},{"type":"button","text":"View Pipeline","url":"https://git.vmo.dev/c3/flutter-temp/pipelines/'$CI_PIPELINE_ID'"},{"type":"button","text":"Download IPA","url":"'$CI_JOB_URL'/artifacts/raw/ios/build/Runner.ipa"}],"pretext":"New IOS build is out!","fields":[{"title":"Last Commit", "value":"'$CI_COMMIT_TITLE'","short":false},{"title":"Branch", "value":"'$CI_BUILD_REF_NAME'","short":false},{"title":"Flavor", "value":"'$BUILD_FLAVOR'","short":true},{"title":"Version Code", "value":"'$BUILD_NUMBER'","short":true},{"title":"Version", "value":"'$BUILD_VERSION'","short":true}],"footer":"Build triggered by '$GITLAB_USER_NAME' | SHA':' '$CI_COMMIT_SHORT_SHA'"}]}')
-    - flutter build ios --flavor $BUILD_FLAVOR_KEY
-    - if [ -d archive ]; then rm -rf archive; fi && mkdir archive
-    - if [ -d artifact ]; then rm -rf artifact; fi && mkdir artifact
-    - cd ios
-    - xcodebuild clean archive -workspace Runner.xcworkspace -scheme Runner -archivePath RunnerArchive
-    - xcodebuild -exportArchive -archivePath RunnerArchive.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
-    - curl -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK_URL
-  artifacts:
-    paths:
-      - ios/build/Runner.ipa
+    - export BUILD_FLAVOR_KEY="dev"
+    - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
+    - sh .setup_fastlane.sh
+    - bundle exec fastlane ios buildIOS --env $BUILD_FLAVOR_KEY --verbose
+
   tags:
-    - vmogroup
+    - mac2015-local
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/
     - /^hotfix/.*$/
     - /^update/.*$/
     - develop
+
+testflight_staging: #Job name
+  stage: build # kind of job
+  when: manual
+  allow_failure: true #Make to skip build step and deploy step
+  needs: [test]
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.pub-cache/
+
+  <<: *mobileBeforeScript
+
+  script:
+    - export BUILD_FLAVOR="Stag"
+    - export BUILD_FLAVOR_KEY="stag"
+    - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
+    - sh .setup_fastlane.sh
+    - bundle exec fastlane ios testFlightDistribute --env $BUILD_FLAVOR_KEY --verbose
+
+  tags:
+    - mac2015-local
+  only:
+    - /^release/.*$/
+    - /^hotfix/.*$/
+    - /^update/.*$/

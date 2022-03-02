@@ -2,6 +2,10 @@
 
 A new Flutter application with clean architecture
 
+## FVM Installation
+
+https://fvm.app/docs/getting_started/installation
+
 ## Getting Started
 
 - Flutter version using : 2.10.1 (stable at 10/2/2022)
@@ -15,9 +19,9 @@ A new Flutter application with clean architecture
 
 Step 2 : Create new Configuration with build flavor value is :
 
-+ Develop Environment : development
-+ Staging Environment : staging
-+ Production Environment : production
++ Develop Environment : dev
++ Staging Environment : stag
++ Production Environment : prod
 
 ### Build APK
 
@@ -267,7 +271,9 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 - Require JAVAHOME
 - Install Ruby (https://docs.fastlane.tools/)
-- gem install bundler (First time run)
-- bundle install (First time run)
-- bundle exec fastlane android buildAndroidLocal --env development (Development environment)
-- bundle exec fastlane android distribute --env development (Development environment Distribute)
+- run script .setup_fastlane.sh (First time run)
+- bundle exec fastlane android buildAndroidLocal --env dev (Development environment)
+- bundle exec fastlane android distribute --env dev (Development environment Distribute)
+- bundle exec fastlane ios buildIOS --env dev (Development environment)
+- bundle exec fastlane ios getProvision --env dev (Get provision development environment)
+

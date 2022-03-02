@@ -1,11 +1,10 @@
-echo "========================Setup Env Config $1======================="
+echo "========================Setup Env Config $BUILD_FLAVOR_KEY======================="
 flavor="Development"
-prefix=$1
 
 #Check prefix and set flavor config
-if [ "$prefix" = "staging" ]; then
+if [ "$BUILD_FLAVOR_KEY" = "staging" ]; then
   flavor="Staging"
-elif [ "$prefix" = "production" ]; then
+elif [ "$BUILD_FLAVOR_KEY" = "production" ]; then
   flavor="Production"
 fi
 
@@ -17,5 +16,5 @@ echo User name "$GITLAB_USER_NAME"
 echo BRANCH_NAME="$CI_BUILD_REF_NAME"
 echo COMMIT_TITLE="$CI_COMMIT_TITLE"
 echo USER_PERFORM="$GITLAB_USER_NAME"
-} >>fastlane/.env."$prefix"
+} >>fastlane/.env."$BUILD_FLAVOR_KEY"
 echo "========================Setup Env Finish======================="

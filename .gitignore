@@ -61,3 +61,6 @@ fastlane/report.xml
 .fvm/flutter_sdk
 *.stackdump
 fastlane/.env.
+*.cer
+*.mobileprovision
+node_modules
