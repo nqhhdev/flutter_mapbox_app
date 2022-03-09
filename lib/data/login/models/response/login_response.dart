@@ -5,20 +5,19 @@ part 'login_response.g.dart';
 
 @JsonSerializable()
 class LoginResponse extends UserEntity {
-  @override
-  final String userName;
-  final String email;
-  final String phone;
-  final String createdAt;
+  final String? userName;
+  final String? email;
+  final String? userPhone;
+  final String? createdAt;
 
   const LoginResponse({
-    required this.userName,
-    required this.email,
-    required this.phone,
-    required this.createdAt,
+    this.userName,
+    this.email,
+    this.userPhone,
+    this.createdAt,
   }) : super(
-          userPhone: phone,
-          userName: userName,
+          phone: userPhone ?? '',
+          name: userName ?? '',
         );
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
