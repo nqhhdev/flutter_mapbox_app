@@ -90,7 +90,6 @@ platform :ios do
    desc "Build app #{PREFIX} ios"
     lane :buildIOS do
     cocoapods(
-    clean_install: true,
     podfile: "ios/Podfile",
     )
       get_certificates(
@@ -133,7 +132,6 @@ platform :ios do
     desc "TestFlight #{PREFIX} ios"
         lane :testFlightDistribute do
         cocoapods(
-        clean_install: true,
               podfile: "ios/Podfile",
             )
           get_certificates(
