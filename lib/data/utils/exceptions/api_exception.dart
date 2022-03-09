@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:clean_architechture/utils/multi-languages/multi_languages_utils.dart';
@@ -21,12 +22,12 @@ class ApiException {
     Object error, [
     StackTrace? stackTrace,
   ]) {
-    // logger.e('ApiException.error:', error, stackTrace);
     if (error is DioError) return ApiException(exception: error);
+    log("Error not from Dio: ${stackTrace.toString()}");
     return ApiException._(
       exception: error,
       errorCode: 0,
-      errorMessage: LocaleKeys.pleaseCheckYourInternetConnection,
+      errorMessage: error.toString(),
     );
   }
 

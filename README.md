@@ -8,7 +8,7 @@ https://fvm.app/docs/getting_started/installation
 
 ## Getting Started
 
-- Flutter version using : 2.10.1 (stable at 10/2/2022)
+- Flutter version using : 2.10.3 (stable at 3/3/2022)
 - Dart version using : 2.16.1
 - Platform android : 31, Build-tools : 30.0.2
 - Java version OpenJDK 11.0.11+9
@@ -134,6 +134,10 @@ project
 |--.gitlab-ci.yml                                    # config ci/cd for gitlab
 |--pubspec.yaml                                      # dart package management file, add new dependencies here
 |--.setup_app.sh                                     # Script to set up app before run app
+|--.setup_env_config.sh                              # Script to set up environment variable to display on ci/cd
+|--.setup_fastlane.sh                                # Script to set up fastlane config before run ci/cd
+|--..build_android.sh                                # Script to build android on local
+
 ```
 
 ## Injections
@@ -241,24 +245,10 @@ flutter pub run build_runner build --delete-conflicting-outputs
 - Run `flutter pub run build_runner build` in console
 - `lib/gen/assets` will be updated with currently available assets.
 
-## Note when build apk release
-
-- Refer to this issue that if using new gradle.properties will be error while build release app. So
-  that need to use older version
-
-+ build.gradle "build:gradle:3.5.0" on android/build.gradle
-+ "gradle-5.6.2" on gradle-wrapper.properties
-
 ## How to change version number and version code :
 
 - Go to pubspec.yaml => line version to change :
 - Example : 1.0.10+3 => Version name : 1.0.10, Version code : 3
-
-## Set-up Gitlab CI
-
-- Follow this link to create runner and register Runner : https://docs.gitlab.com/runner/install/
-- If runner got warning : Run this terminal to verify runner again : gitlab-runner verify
-- Remember using image : cirrusci/flutter:stable on gitlab.ci config
 
 ## Step to change package name
 

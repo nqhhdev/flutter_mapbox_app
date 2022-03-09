@@ -16,10 +16,24 @@ import 'config/app_config.dart';
 import 'utils/di/injection.dart';
 
 void main() async {
+  await _beforeRunApp();
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+      fallbackLocale: const Locale('en', 'US'),
+      path: 'resources/langs/langs.csv',
+      assetLoader: CsvAssetLoader(),
+      child: MyApp(),
+    ),
+  );
+}
+
+Future<void> _beforeRunApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
   await Firebase.initializeApp();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // Listen for flavor triggered by iOS / android build
   await const MethodChannel('flavor').invokeMethod<String>('getFlavor').then(
     (String? flavor) async {
@@ -35,17 +49,6 @@ void main() async {
   );
 
   await setupInjection();
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-  runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
-      fallbackLocale: const Locale('en', 'US'),
-      path: 'resources/langs/langs.csv',
-      assetLoader: CsvAssetLoader(),
-      child: MyApp(),
-    ),
-  );
 }
 
 class MyApp extends StatefulWidget {
@@ -82,10 +85,8 @@ class _MyAppState extends State<MyApp> {
           ScreenUtil.setContext(context);
           return child ?? const SizedBox();
         },
-        title: 'Flutter Demo',
-        navigatorObservers: <NavigatorObserver>[
-          MyApp.observer,
-        ],
+        title: 'Flutter Template',
+        navigatorObservers: <NavigatorObserver>[MyApp.observer],
         navigatorKey: NavigationUtil.rootKey,
         debugShowCheckedModeBanner: false,
         initialRoute: RouteDefine.loginScreen.name,
