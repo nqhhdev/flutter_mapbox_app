@@ -23,6 +23,10 @@ Step 2 : Create new Configuration with build flavor value is :
 + Staging Environment : stag
 + Production Environment : prod
 
+### Command need to run before run app
+
+- Please run script ".setup_app.sh" in terminal (On MacOS if can't run this script please try "sh .setup_app.sh")
+
 ### Build APK
 
 - flutter build apk --flavor {flavorOnStep2}
@@ -30,10 +34,6 @@ Step 2 : Create new Configuration with build flavor value is :
 ### Build IPA without archive on Xcode
 
 - flutter build ipa --flavor {flavorOnStep2} --export-options-plist=ios/Runner/ExportOptions.plist
-
-### Command need to run before run app
-
-- Please run script ".setup_app.sh" in terminal
 
 ### Project architecture (Clean Architecture Approach)
 
@@ -269,7 +269,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## Using fastlane
 
-- Require JAVAHOME
+- Require JAVAHOME (JDK 11 https://www.oracle.com/java/technologies/downloads/#java11-mac)
 - Install Ruby (https://docs.fastlane.tools/)
 - run script .setup_fastlane.sh (First time run)
 - bundle exec fastlane android buildAndroidLocal --env dev (Development environment)

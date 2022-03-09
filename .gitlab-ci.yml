@@ -17,7 +17,6 @@ stages:
 
 test:
   stage: test
-  when: manual
   tags:
     - vmogroup
   cache:
@@ -133,7 +132,7 @@ diawi_ios_dev: #Job name
     - bundle exec fastlane ios buildIOS --env $BUILD_FLAVOR_KEY --verbose
 
   tags:
-    - mac2015-local
+    - macmini-2014
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/
@@ -160,7 +159,7 @@ testflight_staging: #Job name
     - bundle exec fastlane ios testFlightDistribute --env $BUILD_FLAVOR_KEY --verbose
 
   tags:
-    - mac2015-local
+    - macmini-2014
   only:
     - /^release/.*$/
     - /^hotfix/.*$/
