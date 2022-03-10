@@ -12,6 +12,7 @@ https://fvm.app/docs/getting_started/installation
 - Dart version using : 2.16.1
 - Platform android : 31, Build-tools : 30.0.2
 - Java version OpenJDK 11.0.11+9
+- Gradle version 6.7.1
 
 ### Configuration Environment Running
 
