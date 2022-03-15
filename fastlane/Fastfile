@@ -25,27 +25,12 @@ APP_NAME = ENV["APP_ANDROID_NAME"]
 BUILD_PATH_DEFAULT = "build/app/outputs/flutter-apk/app-#{PREFIX}-release.apk"
 BUILD_IOS_PATH = "build/ios"
 ARCHIVE_IOS_PATH = "build/ios#{APP_NAME}.ipa"
-GRADLE_PATH = './android'
+GRADLE_PATH = 'android/'
 CHANGELOG = File.read("../release-note.txt")
 
 platform :android do
-    desc "Send Build Android Version #{FLAVOR}"
-    lane :sendBuildToGoogleChat do
-       diawi( token: ENV['DIAWI_TOKEN'],file: "#{BUILD_PATH_DEFAULT}")
-       google_chat(
-             webhook: ENV['GOOGLE_CHAT_URL'],
-             title: "Build Android #{FLAVOR}",
-             description: "Perform by #{USER_PERFORM}",
-             buttonTitle: "DOWNLOAD",
-             section1Title:"Branch #{NAME_BRANCH}",
-             section1Description:"Commit #{COMMIT_TITLE}",
-             buttonUrl: lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI],
-             imageUrl:  ENV['IMAGE_URL']
-           )
-    end
-
-     desc "Build Android Version Local"
-        lane :buildAndroidLocal do
+     desc "Build Android Version Version #{FLAVOR}"
+        lane :buildAndroid do
            gradle(task: "clean assemble#{FLAVOR}Release",project_dir: GRADLE_PATH)
            diawi( token: ENV['DIAWI_TOKEN'],file: "#{BUILD_PATH_DEFAULT}")
            google_chat(

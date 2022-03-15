@@ -48,13 +48,12 @@ diawi_android_dev: #Job name
   <<: *mobileBeforeScript
 
   script:
-    # These step is set-up for distribute to slack app and google chat
+    - sh .setup_env_gradle.sh
     - export BUILD_FLAVOR="Dev"
     - export BUILD_FLAVOR_KEY="dev"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
-    - sh .build_android.sh
     - sh .setup_fastlane.sh
-    - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
+    - bundle exec fastlane buildAndroid --env $BUILD_FLAVOR_KEY
 
   tags:
     - vops-runner
@@ -78,12 +77,12 @@ diawi_android_staging: #Job name
 
   script:
     # These step is set-up for distribute to slack app and google chat
+    - sh .setup_env_gradle.sh
     - export BUILD_FLAVOR="Stag"
     - export BUILD_FLAVOR_KEY="stag"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
-    - sh .build_android.sh $BUILD_FLAVOR_KEY
     - sh .setup_fastlane.sh
-    - bundle exec fastlane sendBuildToGoogleChat --env $BUILD_FLAVOR_KEY
+    - bundle exec fastlane buildAndroid --env $BUILD_FLAVOR_KEY
 
   artifacts:
     paths:
