@@ -15,29 +15,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android beta
-
-```sh
-[bundle exec] fastlane android beta
-```
-
-Submit a new Beta Build to Crashlytics Beta
-
-### android deploy
-
-```sh
-[bundle exec] fastlane android deploy
-```
-
-Deploy a new version to the Google Play
-
 ### android sendBuildToGoogleChat
 
 ```sh
 [bundle exec] fastlane android sendBuildToGoogleChat
 ```
 
-Send Build Android Version Prod
+Send Build Android Version Dev
 
 ### android buildAndroidLocal
 
@@ -66,7 +50,7 @@ Distribute To Firebase
 [bundle exec] fastlane ios buildIOS
 ```
 
-Build app prod ios
+Build app dev ios
 
 ### ios testFlightDistribute
 
@@ -74,7 +58,7 @@ Build app prod ios
 [bundle exec] fastlane ios testFlightDistribute
 ```
 
-TestFlight prod ios
+TestFlight dev ios
 
 ### ios getProvision
 
@@ -82,7 +66,7 @@ TestFlight prod ios
 [bundle exec] fastlane ios getProvision
 ```
 
-Get provision prod ios
+Get provision dev ios
 
 ----
 
