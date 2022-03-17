@@ -56,7 +56,7 @@ diawi_android_dev: #Job name
     - bundle exec fastlane buildAndroid --env $BUILD_FLAVOR_KEY
 
   tags:
-    - vops-runner
+    - vmogroup
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/
@@ -88,7 +88,7 @@ diawi_android_staging: #Job name
     paths:
       - build/app/outputs/flutter-apk/app-stag-release.apk
   tags:
-    - vops-runner
+    - vmogroup
   only:
     - /^bugfix/.*$/
     - /^feature/.*$/

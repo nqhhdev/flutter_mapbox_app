@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:clean_architechture/config/navigation_util.dart';
+import 'package:alice/alice.dart';
 import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/utils/route/app_routing.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         },
         title: 'Flutter Template',
         navigatorObservers: <NavigatorObserver>[MyApp.observer],
-        navigatorKey: NavigationUtil.rootKey,
+        navigatorKey: getIt<Alice>().getNavigatorKey(),
         debugShowCheckedModeBanner: false,
         initialRoute: RouteDefine.loginScreen.name,
         onGenerateRoute: AppRouting.generateRoute,
