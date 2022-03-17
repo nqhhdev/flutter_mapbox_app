@@ -22,11 +22,12 @@ Step 2 : Create new Configuration with build flavor value is :
 
 + Develop Environment : dev
 + Staging Environment : stag
-+ Production Environment : prod
++ Production Environment : (No need flavor value)
 
 ### Command need to run before run app
 
-- Please run script ".setup_app.sh" in terminal (On MacOS if can't run this script please try "sh .setup_app.sh")
+- Please run script ".setup_app.sh" in terminal (On MacOS if can't run this script please try "sh
+  .setup_app.sh")
 
 ### Build APK
 
@@ -70,7 +71,6 @@ Step 2 : Create new Configuration with build flavor value is :
     1. https://github.com/ResoCoder/flutter-tdd-clean-architecture-course
     2. https://github.com/ShadyBoukhary/flutter_clean_architecture (We don't use this plugin)
     3. https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
-
 
 ## Project Structure
 
@@ -143,8 +143,9 @@ project
 
 ## Injections
 
-1. We are using `GetIt` for injections. It is fun because we can start the service locator and use
-   it everywhere when needed because they are injected at top-level in main.dart.
+1. We are using [get_it](https://pub.dev/packages/get_it) for injections. It is fun because we can
+   start the service locator and use it everywhere when needed because they are injected at
+   top-level in main.dart.
 2. Only use it upon initialization
 
 ```
@@ -181,8 +182,11 @@ For non widget usage, manually inject the object on initialization.
 
 ### Localization
 
-We are using Easy Localization to handle multi-languages. Using google sheet file on cloud will take
-less effort for change and update key and value. Only need update in google sheet file.
+We are using [Easy Localization](https://pub.dev/packages/easy_localization) to handle
+multi-languages.
+Using [Google Sheet Generator](https://github.com/Hoang-Nguyenn/easy_localization_generator) on
+cloud will take less effort for change and update key and value. Only need update in google sheet
+file.
 
 Google sheet sample on this project :
 "https://docs.google.com/spreadsheets/d/1SpiJWFRfJaIRnzpEc0mJ2WaaI9JYlz8jKBPduAPzdXE/edit#gid=1013756643"
@@ -228,6 +232,11 @@ generator using build_runner and remove conflict file :
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
+### Dio Interceptor
+
+- This project using [pretty_dio_logger](https://pub.dev/packages/pretty_dio_logger) for display log
+  in console and [alice](https://pub.dev/packages/alice) inspector http request in UI for debugging.
+
 # Assets
 
 - Image is handled by [flutter_gen](https://pub.dev/packages/flutter_gen) for auto-complete and not
@@ -253,8 +262,8 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 ## Step to change package name
 
-- We using library change_app_package_name for easy and fast to change all package name on android
-  and IOS
+- We using library [change_app_package_name](https://pub.dev/packages/change_app_package_name) for
+  easy and fast to change all package name on android and IOS
 - Using terminal : flutter pub run change_app_package_name:main "newPackageName"
 - Example : flutter pub run change_app_package_name:main com.vmo.newApp
 
@@ -267,4 +276,3 @@ flutter pub run build_runner build --delete-conflicting-outputs
 - bundle exec fastlane android distribute --env dev (Development environment Distribute)
 - bundle exec fastlane ios buildIOS --env dev (Development environment)
 - bundle exec fastlane ios getProvision --env dev (Get provision development environment)
-

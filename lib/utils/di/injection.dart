@@ -1,4 +1,6 @@
+import 'package:alice/alice.dart';
 import 'package:clean_architechture/config/app_config.dart';
+import 'package:clean_architechture/config/navigation_util.dart';
 import 'package:clean_architechture/config/theme.dart';
 import 'package:clean_architechture/data/login/api/login_api.dart';
 import 'package:clean_architechture/data/login/repositories/login_repository_impl.dart';
@@ -31,6 +33,14 @@ Future<void> _registerNetworkComponents() async {
       connectTimeout: 10000,
     ),
   );
+
+  final Alice alice = Alice(
+    navigatorKey: NavigationUtil.rootKey,
+    showShareButton: false,
+  );
+
+  getIt.registerSingleton(alice);
+
   dio.interceptors.addAll(
     [
       PrettyDioLogger(
@@ -39,6 +49,7 @@ Future<void> _registerNetworkComponents() async {
         responseHeader: true,
         responseBody: true,
       ),
+      alice.getDioInterceptor(),
     ],
   );
   getIt.registerSingleton(dio);
