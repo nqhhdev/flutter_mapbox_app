@@ -68,8 +68,8 @@ android {
             resValue "string", "app_name", "App Name Dev"
         }
         stag {
-            applicationIdSuffix ".stag"
-            versionNameSuffix = "-stag"
+            applicationIdSuffix ".stg"
+            versionNameSuffix = "-stg"
             resValue "string", "app_name", "App Name Stag"
         }
         prod {

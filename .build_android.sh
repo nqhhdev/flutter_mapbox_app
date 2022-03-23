@@ -1,4 +1,6 @@
-echo "========================Build Android $BUILD_FLAVOR_KEY Run======================="
+GREEN='\033[1;32m'
+
+echo "${GREEN}========================Build Android $BUILD_FLAVOR_KEY Run======================="
 
 if hash fvm 2>/dev/null; then
   echo "Using fvm flutter version"
