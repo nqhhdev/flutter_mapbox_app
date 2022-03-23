@@ -17,12 +17,22 @@ stages:
 
 test:
   stage: test
-#  when: manual
+  #  when: manual
   tags:
     - vmogroup
   cache:
-    paths:
-      - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_pub-cache
+      paths:
+        - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_generate-files
+      paths:
+        - $CI_PROJECT_DIR/lib/**/*.g.dart
+    - key: ${CI_COMMIT_REF_SLUG}_gen
+      paths:
+        - $CI_PROJECT_DIR/lib/gen/
+    - key: ${CI_COMMIT_REF_SLUG}_localization
+      paths:
+        - $CI_PROJECT_DIR/resources/
 
   <<: *mobileBeforeScript
 
@@ -40,10 +50,20 @@ diawi_android_dev: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
-  needs: [test]
+  needs: [ test ]
   cache:
-    paths:
-      - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_pub-cache
+      paths:
+        - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_generate-files
+      paths:
+        - $CI_PROJECT_DIR/lib/**/*.g.dart
+    - key: ${CI_COMMIT_REF_SLUG}_gen
+      paths:
+        - $CI_PROJECT_DIR/lib/gen/
+    - key: ${CI_COMMIT_REF_SLUG}_localization
+      paths:
+        - $CI_PROJECT_DIR/resources/
 
   <<: *mobileBeforeScript
 
@@ -53,6 +73,7 @@ diawi_android_dev: #Job name
     - export BUILD_FLAVOR_KEY="dev"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
     - sh .setup_fastlane.sh
+#    - sh .build_android.sh $BUILD_FLAVOR_KEY
     - bundle exec fastlane buildAndroid --env $BUILD_FLAVOR_KEY
 
   tags:
@@ -68,10 +89,20 @@ diawi_android_staging: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
-  needs: [test]
+  needs: [ test ]
   cache:
-    paths:
-      - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_pub-cache
+      paths:
+        - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_generate-files
+      paths:
+        - $CI_PROJECT_DIR/lib/**/*.g.dart
+    - key: ${CI_COMMIT_REF_SLUG}_gen
+      paths:
+        - $CI_PROJECT_DIR/lib/gen/
+    - key: ${CI_COMMIT_REF_SLUG}_localization
+      paths:
+        - $CI_PROJECT_DIR/resources/
 
   <<: *mobileBeforeScript
 
@@ -79,7 +110,7 @@ diawi_android_staging: #Job name
     # These step is set-up for distribute to slack app and google chat
     - sh .setup_env_gradle.sh
     - export BUILD_FLAVOR="Stag"
-    - export BUILD_FLAVOR_KEY="stag"
+    - export BUILD_FLAVOR_KEY="stg"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
     - sh .setup_fastlane.sh
     - bundle exec fastlane buildAndroid --env $BUILD_FLAVOR_KEY
@@ -99,11 +130,11 @@ diawi_android_staging: #Job name
 firebase_android_staging:
   stage: deploy
   when: manual
-  needs: [diawi_android_staging]
+  needs: [ diawi_android_staging ]
   dependencies:
     - diawi_android_staging
   script:
-    - export BUILD_FLAVOR_KEY="stag"
+    - export BUILD_FLAVOR_KEY="stg"
     - sh .setup_fastlane.sh
     - bundle exec fastlane distribute --env $BUILD_FLAVOR_KEY
   tags:
@@ -117,10 +148,20 @@ diawi_ios_dev: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
-  needs: [test]
+  needs: [ test ]
   cache:
-    paths:
-      - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_pub-cache
+      paths:
+        - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_generate-files
+      paths:
+        - $CI_PROJECT_DIR/lib/**/*.g.dart
+    - key: ${CI_COMMIT_REF_SLUG}_gen
+      paths:
+        - $CI_PROJECT_DIR/lib/gen/
+    - key: ${CI_COMMIT_REF_SLUG}_localization
+      paths:
+        - $CI_PROJECT_DIR/resources/
 
   <<: *mobileBeforeScript
 
@@ -144,16 +185,26 @@ testflight_staging: #Job name
   stage: build # kind of job
   when: manual
   allow_failure: true #Make to skip build step and deploy step
-  needs: [test]
+  needs: [ test ]
   cache:
-    paths:
-      - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_pub-cache
+      paths:
+        - $CI_PROJECT_DIR/.pub-cache/
+    - key: ${CI_COMMIT_REF_SLUG}_generate-files
+      paths:
+        - $CI_PROJECT_DIR/lib/**/*.g.dart
+    - key: ${CI_COMMIT_REF_SLUG}_gen
+      paths:
+        - $CI_PROJECT_DIR/lib/gen/
+    - key: ${CI_COMMIT_REF_SLUG}_localization
+      paths:
+        - $CI_PROJECT_DIR/resources/
 
   <<: *mobileBeforeScript
 
   script:
     - export BUILD_FLAVOR="Stag"
-    - export BUILD_FLAVOR_KEY="stag"
+    - export BUILD_FLAVOR_KEY="stg"
     - sh .setup_env_config.sh $BUILD_FLAVOR_KEY
     - sh .setup_fastlane.sh
     - bundle exec fastlane ios testFlightDistribute --env $BUILD_FLAVOR_KEY --verbose

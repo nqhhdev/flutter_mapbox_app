@@ -1,4 +1,6 @@
-echo "========================Setup Env Config $BUILD_FLAVOR_KEY======================="
+GREEN='\033[1;32m'
+
+echo "${GREEN}========================Setup Env Config $BUILD_FLAVOR_KEY======================="
 flavor="Development"
 
 #Check prefix and set flavor config
