@@ -42,7 +42,7 @@ dependencies:
   json_annotation: ^4.4.0
 
   #Localization library
-  sheet_loader_localization: ^0.0.5
+  sheet_loader_localization: ^0.0.8
   easy_localization: ^3.0.0
   easy_localization_loader: ^1.0.0
 
