@@ -10,12 +10,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/app_config.dart';
 import 'utils/di/injection.dart';
 
 void main() async {
+  await dotenv.load(fileName: "assets/.env");
   await _beforeRunApp();
   runApp(
     EasyLocalization(
@@ -80,7 +82,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(400, 800),
-      builder: () => MaterialApp(
+      minTextAdapt: true,
+      builder: (_) => MaterialApp(
         builder: (context, child) {
           ScreenUtil.setContext(context);
           return child ?? const SizedBox();
@@ -89,7 +92,7 @@ class _MyAppState extends State<MyApp> {
         navigatorObservers: <NavigatorObserver>[MyApp.observer],
         navigatorKey: getIt<Alice>().getNavigatorKey(),
         debugShowCheckedModeBanner: false,
-        initialRoute: RouteDefine.loginScreen.name,
+        initialRoute: RouteDefine.splashScreen.name,
         onGenerateRoute: AppRouting.generateRoute,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,

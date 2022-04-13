@@ -64,3 +64,4 @@ fastlane/.env.
 *.cer
 *.mobileprovision
 node_modules
+/assets/.env

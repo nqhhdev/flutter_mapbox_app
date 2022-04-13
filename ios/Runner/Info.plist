@@ -24,6 +24,10 @@
 	<string>${PRODUCT_FLAVOR}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MBXAccessToken</key>
+	<string>sk.eyJ1IjoibnFoaGRldiIsImEiOiJjbDF4YjBjNDIwMTJqM21xb3MxeTdvZmt0In0.8Ucn5-dQCi9YK6h0IRElMw</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>The app needs your location to use the maps</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
